@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="movies_async_task_loader_id">11</integer>
+    <integer name="movies_card_movie_name_text_view_max_line">1</integer>
+    <integer name="result_fragment_grid_span_count_portrait">2</integer>
+    <integer name="result_fragment_grid_span_count_landscape">3</integer>
+    <integer name="result_fragment_recycler_item_decorator_spacing">3</integer>
+    <integer name="detail_movie_fragment_no_color_value">0</integer>
+    <integer name="movies_request_param_sort_by_most_popular_index_array">0</integer>
+    <integer name="movies_request_param_sort_by_top_rated_index_array">1</integer>
+    <integer name="result_fragment_default_save_position">0</integer>
+</resources>

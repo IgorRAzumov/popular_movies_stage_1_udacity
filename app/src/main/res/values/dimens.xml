@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_large">15dp</dimen>
+    <dimen name="card_movies_corner_radius">3dp</dimen>
+    <dimen name="card_movies_card_elevation">3dp</dimen>
+    <dimen name="card_movies_height">240dp</dimen>
+    <dimen name="card_movie_rating_tv_padding">3dp</dimen>
+    <dimen name="spacing_xmlarge">40dp</dimen>
+    <dimen name="fragment_movie_detail_collapsing_toolbar_height">350dp</dimen>
+    <dimen name="fragment_movie_detail_toolbar_content_insertStars">0dp</dimen>
+    <dimen name="fragment_movie_detail_nested_scroll_margin_top">-16dp</dimen>
+    <dimen name="fragment_movie_detail_name_card_corner_radius">2dp</dimen>
+    <dimen name="fragment_movie_detail_name_card_elevation">2dp</dimen>
+    <dimen name="fragment_movie_detail_plot_synopsis_corner_radius">2dp</dimen>
+    <dimen name="fragment_movie_detail_plot_synopsis_card_elevation">2dp</dimen>
+</resources>

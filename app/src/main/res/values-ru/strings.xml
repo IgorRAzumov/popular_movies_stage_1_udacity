@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ТВОИ ФИЛЬМЫ</string>
+    <string name="activity_detail_movie_description">Описание фильма:</string>
+    <string name="main_activity_menu_spinner_most_popular_item">ПО ПОПУЛЯРНОСТИ</string>
+    <string name="main_activity_menu_spinner_top_rated_item">ПО РЕЙТИНГУ</string>
+    <string name="fragment_movie_detail_vote_average_tv_text">"Средняя оценка: "</string>
+    <string name="fragment_movie_detail_release_date_tv_text">Даты выхода :</string>
+    <string name="main_menu_spinner_title">СОРТИРОВКА РЕЗКЛЬТАТА</string>
+    <string name="main_activity_retry_load_data">ПОВТОРИТЬ</string>
+    <string name="error_load_data_message">Ошибка загрузки.Попробуйте еще.</string>
+    <string name="fragment_movie_detail_movie_poster_image_description">постер фильма</string>
+    <string name="fragment_movie_detail_star_vote_average_description">рейтинг</string>
+</resources>
