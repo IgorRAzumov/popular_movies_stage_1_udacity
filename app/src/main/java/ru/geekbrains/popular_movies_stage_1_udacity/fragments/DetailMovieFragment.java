@@ -15,6 +15,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.Result;
 
@@ -26,6 +32,24 @@ public class DetailMovieFragment extends Fragment {
 
     private Bitmap posterBitmap;
 
+    @BindView(R.id.tv_fragment_detail_movies_original_name)
+    TextView movieOriginalNameTextView;
+    @BindView(R.id.tv_fragment_detail_movies_release_date)
+    TextView movieReleaseDateTextView;
+    @BindView(R.id.tv_fragment_detail_movies_vote_average)
+    TextView movieVoteAverageTextView;
+    @BindView(R.id.tv_fragment_detail_movies_plot_synopsis)
+    TextView moviePlotSynopsisTextView;
+    @BindView(R.id.tv_fragment_detail_movie_film_description_label)
+    TextView moviePlotSynopsisTextViewLabel;
+    @BindView(R.id.iv_fragment_detail_movie_poster_toolbar)
+    ImageView posterImage;
+    @BindView(R.id.tb_activity_detail_toolbar)
+    Toolbar toolbar;
+    @BindViews({R.id.lly_fragment_detail_movie_description_card, R.id.lly_fragment_detail_movie_main_card})
+    List<LinearLayout> cardsBackgroundLayouts;
+
+    private Unbinder unbinder;
 
     public DetailMovieFragment() {
 
@@ -81,27 +105,18 @@ public class DetailMovieFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
-        initToolbar(view);
-        TextView movieOriginalNameTextView = view.findViewById(R.id.tv_fragment_detail_movies_original_name);
-        TextView movieReleaseDateTextView = view.findViewById(R.id.tv_fragment_detail_movies_release_date);
-        TextView movieVoteAverageTextView = view.findViewById(R.id.tv_fragment_detail_movies_vote_average);
-        TextView moviePlotSynopsisTextView = view.findViewById(R.id.tv_fragment_detail_movies_plot_synopsis);
-        TextView moviePlotSynopsisTextViewLabel = view.findViewById(R.id.tv_fragment_detail_movie_film_description_label);
-        LinearLayout mainMovieCard = view.findViewById(R.id.lly_fragment_detail_movie_main_card);
-        LinearLayout descriptionMovieCard = view.findViewById(R.id.lly_fragment_detail_movie_description_card);
+        unbinder = ButterKnife.bind(this, view);
+        initToolbar();
 
-        ImageView posterImage = view.findViewById(R.id.iv_fragment_detail_movie_poster_toolbar);
 
         int noColorValue = getResources().getInteger(R.integer.detail_movie_fragment_no_color_value);
         if (backgroundColor != noColorValue && bodyTextColor != noColorValue
                 && titleTextColor != noColorValue) {
-            mainMovieCard.setBackgroundColor(backgroundColor);
-            descriptionMovieCard.setBackgroundColor(backgroundColor);
+            ButterKnife.apply(cardsBackgroundLayouts, SET_BACKGROUND_CARD);
 
             movieOriginalNameTextView.setTextColor(titleTextColor);
             movieReleaseDateTextView.setTextColor(bodyTextColor);
             movieVoteAverageTextView.setTextColor(bodyTextColor);
-
             moviePlotSynopsisTextViewLabel.setTextColor(titleTextColor);
             moviePlotSynopsisTextView.setTextColor(bodyTextColor);
         }
@@ -115,9 +130,13 @@ public class DetailMovieFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
-    private void initToolbar(View view) {
-        Toolbar toolbar = view.findViewById(R.id.tb_activity_detail_toolbar);
+    private void initToolbar() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         if (activity != null) {
             activity.setSupportActionBar(toolbar);
@@ -128,4 +147,11 @@ public class DetailMovieFragment extends Fragment {
             }
         }
     }
+
+    final ButterKnife.Action<View> SET_BACKGROUND_CARD = new ButterKnife.Action<View>() {
+        @Override
+        public void apply(View view, int index) {
+            view.setBackgroundColor(backgroundColor);
+        }
+    };
 }

@@ -29,7 +29,7 @@ public class DetailMovieActivity extends AppCompatActivity implements Target {
 
         movie = getIntent().getParcelableExtra(getString(R.string.movie_intent_key));
         if (movie != null) {
-            String posterUrl = getString(R.string.poster_movie_base_url_w342) + movie.getPosterPath();////////////UriBuilder
+            String posterUrl = getString(R.string.poster_movie_base_url_w342) + movie.getPosterPath();
             NetworkUtils.LoadBigPosterImage(DetailMovieActivity.this, posterUrl, this);
         } else {
             throw new RuntimeException(this.getClass().getCanonicalName()
@@ -46,7 +46,6 @@ public class DetailMovieActivity extends AppCompatActivity implements Target {
                     .commit();
         }
     }
-
 
     @Override
     public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {

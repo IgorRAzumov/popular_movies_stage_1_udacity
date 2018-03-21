@@ -22,6 +22,7 @@ import android.widget.Spinner;
 
 import java.lang.ref.WeakReference;
 
+
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MoviesAsyncTask;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
@@ -49,7 +50,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         language = Resources.getSystem().getConfiguration().locale.getLanguage();
-
         resultActivityHandler = new ResultActivityHandler(new WeakReference<>(this));
 
         FragmentManager fragmentManager = getSupportFragmentManager();

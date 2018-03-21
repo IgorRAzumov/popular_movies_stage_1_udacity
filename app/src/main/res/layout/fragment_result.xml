@@ -5,7 +5,7 @@
     tools:context="ru.geekbrains.popular_movies_stage_1_udacity.fragments.ResultFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_fragment_result"
+        android:id="@+id/rv_fragment_main_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />

@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.Result;
@@ -55,18 +57,18 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return moviesList.get(position);
     }
 
-    private class MovieResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private final ImageView moviePoster;
-        private final TextView movieName;
-        private final TextView movieRating;
+    class MovieResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        @BindView(R.id.iv_card_movie_poster)
+        ImageView moviePoster;
+        @BindView(R.id.tv_card_movie_name)
+        TextView movieName;
+        @BindView(R.id.tv_card_movie_rating)
+        TextView movieRating;
 
 
         MovieResultHolder(View itemView) {
             super(itemView);
-            moviePoster = itemView.findViewById(R.id.iv_card_movie_poster);
-            movieName = itemView.findViewById(R.id.tv_card_movie_name);
-            movieRating = itemView.findViewById(R.id.tv_card_movie_rating);
-
+            ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }
 

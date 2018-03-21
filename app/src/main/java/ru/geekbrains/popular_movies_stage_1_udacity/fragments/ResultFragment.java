@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MoviesResultAdapter;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
@@ -21,10 +24,13 @@ import ru.geekbrains.popular_movies_stage_1_udacity.widgets.SpacingItemDecoratio
 
 
 public class ResultFragment extends Fragment implements RecyclerViewOnClickListener {
-    private RecyclerView resultRecycler;
-
     private OnFragmentInteractionListener interactionListener;
     private MoviesResultAdapter moviesResultAdapter;
+
+    @BindView(R.id.rv_fragment_main_result)
+    RecyclerView resultRecycler;
+
+    private Unbinder unbinder;
 
     public ResultFragment() {
     }
@@ -53,7 +59,7 @@ public class ResultFragment extends Fragment implements RecyclerViewOnClickListe
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
-        resultRecycler = view.findViewById(R.id.rv_fragment_result);
+        unbinder = ButterKnife.bind(this, view);
         initResultRecycler();
 
         if (savedInstanceState != null) {
@@ -114,6 +120,12 @@ public class ResultFragment extends Fragment implements RecyclerViewOnClickListe
     public void onDetach() {
         super.onDetach();
         interactionListener = null;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
