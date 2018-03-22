@@ -2,8 +2,6 @@
     <string name="poster_movie_base_url_w342" translatable="false">https://image.tmdb.org/t/p/w342</string>
     <string name="poster_movie_base_url_w185" translatable="false">https://image.tmdb.org/t/p/w185</string>
 
-    <string name="api_key" translatable="false">your key here</string>
-
     <string name="movies_response_bundle_key" translatable="false">movies-page-result-list-bundle-key</string>
     <string name="movie_bundle_key" translatable="false">movie-bundle-key</string>
     <string name="movie_intent_key" translatable="false">movie-intent-key</string>

@@ -5,5 +5,5 @@
         android:id="@+id/action_switch_sort_by_spinner"
         android:title="@string/main_menu_spinner_title"
         app:actionViewClass="android.widget.Spinner"
-        app:showAsAction="collapseActionView" />
+        app:showAsAction="ifRoom" />
 </menu>

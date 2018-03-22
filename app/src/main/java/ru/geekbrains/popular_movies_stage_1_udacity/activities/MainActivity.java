@@ -22,7 +22,6 @@ import android.widget.Spinner;
 
 import java.lang.ref.WeakReference;
 
-
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MoviesAsyncTask;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
@@ -74,32 +73,30 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.menu_basic, menu);
         MenuItem item = menu.findItem(R.id.action_switch_sort_by_spinner);
 
-        final int selectedSpinnerPositions =
-                PrefUtils.readSortBySpinnerPositionFromSharedPref(this);
 
         menuSpinner = (Spinner) item.getActionView();
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.main_activity_menu_spinner_list_item_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         menuSpinner.setAdapter(adapter);
-        menuSpinner.setSelection(selectedSpinnerPositions, false);
+        menuSpinner.setSelection(PrefUtils.readSortBySpinnerPositionFromSharedPref(this),
+                false);
         menuSpinner.setOnItemSelectedListener((new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != selectedSpinnerPositions) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(getString(R.string.sort_by_movies_bundle_key), getSortByParam(position));
-                    bundle.putString(getString(R.string.language_bundle_key), language);
-                    getSupportLoaderManager()
-                            .restartLoader(getResources().getInteger(R.integer.movies_async_task_loader_id),
-                                    bundle, MainActivity.this);
+                Bundle bundle = new Bundle();
+                bundle.putString(getString(R.string.sort_by_movies_bundle_key), getSortByParam(position));
+                bundle.putString(getString(R.string.language_bundle_key), language);
+                getSupportLoaderManager()
+                        .restartLoader(getResources().getInteger(R.integer.movies_async_task_loader_id),
+                                bundle, MainActivity.this);
 
-                    FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fl_main_activity_container, new ProgressBarFragment())
-                            .setTransition(TRANSIT_FRAGMENT_FADE)
-                            .commit();
-                }
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fl_main_activity_container, new ProgressBarFragment())
+                        .setTransition(TRANSIT_FRAGMENT_FADE)
+                        .commit();
+
             }
 
             @Override
@@ -131,7 +128,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     private String getSortByParam(int sortByPosition) {
         String sortBy;
         if (sortByPosition == getResources()
@@ -142,7 +138,6 @@ public class MainActivity extends AppCompatActivity
         }
         return sortBy;
     }
-
 
     @SuppressWarnings({"ConstantConditions", "NullableProblems"})
     @Override
