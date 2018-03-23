@@ -18,7 +18,7 @@ import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MoviesResultAdapter;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.Result;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.Utils;
 import ru.geekbrains.popular_movies_stage_1_udacity.widgets.SpacingItemDecoration;
 
@@ -134,6 +134,6 @@ public class ResultFragment extends Fragment implements RecyclerViewOnClickListe
     }
 
     public interface OnFragmentInteractionListener {
-        void onMovieClick(Result movie);
+        void onMovieClick(MovieResult movie);
     }
 }

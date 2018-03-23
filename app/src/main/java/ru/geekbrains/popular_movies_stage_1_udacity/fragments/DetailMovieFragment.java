@@ -22,13 +22,13 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.Result;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
 
 public class DetailMovieFragment extends Fragment {
     private int backgroundColor;
     private int titleTextColor;
     private int bodyTextColor;
-    private Result movie;
+    private MovieResult movie;
 
     private Bitmap posterBitmap;
 
@@ -57,7 +57,7 @@ public class DetailMovieFragment extends Fragment {
 
     public static DetailMovieFragment newInstance(Context context, int backgroundColor,
                                                   int titleTextColor, int bodyTextColor,
-                                                  Bitmap bitmap, Result movie) {
+                                                  Bitmap bitmap, MovieResult movie) {
         Bundle bundle = new Bundle();
         bundle.putInt(context.getString(R.string.background_color_bundle_key),
                 backgroundColor);
@@ -74,7 +74,7 @@ public class DetailMovieFragment extends Fragment {
         return detailMovieFragment;
     }
 
-    public static DetailMovieFragment newInstance(Context context, Bitmap bitmap, Result movie) {
+    public static DetailMovieFragment newInstance(Context context, Bitmap bitmap, MovieResult movie) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(
                 context.getString(R.string.poster_bitmap_bundle_key), bitmap);

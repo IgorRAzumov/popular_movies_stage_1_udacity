@@ -11,17 +11,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Result implements Serializable, Parcelable {
+public class MovieResult implements Serializable, Parcelable {
 
-    public static final Parcelable.Creator<Result> CREATOR = new Parcelable.Creator<Result>() {
+    public static final Parcelable.Creator<MovieResult> CREATOR = new Parcelable.Creator<MovieResult>() {
         @Override
-        public Result createFromParcel(Parcel source) {
-            return new Result(source);
+        public MovieResult createFromParcel(Parcel source) {
+            return new MovieResult(source);
         }
 
         @Override
-        public Result[] newArray(int size) {
-            return new Result[size];
+        public MovieResult[] newArray(int size) {
+            return new MovieResult[size];
         }
     };
     @SerializedName("vote_count")
@@ -67,10 +67,10 @@ public class Result implements Serializable, Parcelable {
     @Expose
     private String releaseDate;
 
-    public Result() {
+    public MovieResult() {
     }
 
-    private Result(Parcel in) {
+    private MovieResult(Parcel in) {
         this.voteCount = (Integer) in.readValue(Integer.class.getClassLoader());
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.video = (Boolean) in.readValue(Boolean.class.getClassLoader());

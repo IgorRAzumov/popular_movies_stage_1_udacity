@@ -22,17 +22,19 @@ import android.widget.Spinner;
 
 import java.lang.ref.WeakReference;
 
+import butterknife.BindInt;
+import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
-import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MoviesAsyncTask;
+import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MoviesAsyncTaskLoader;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.Result;
 import ru.geekbrains.popular_movies_stage_1_udacity.fragments.ProgressBarFragment;
 import ru.geekbrains.popular_movies_stage_1_udacity.fragments.ResultFragment;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.PrefUtils;
 
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN;
-import static ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity.ResultActivityHandler.COMPLETE_DATA_LOAD_HANDLER_CODE;
+import static ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity.ResultActivityHandler.COMPLETE_VIDEOS_LOAD_HANDLER_CODE;
 import static ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity.ResultActivityHandler.ERROR_DATA_LOAD_HANDLER_CODE;
 
 public class MainActivity extends AppCompatActivity
@@ -43,11 +45,14 @@ public class MainActivity extends AppCompatActivity
 
     private Spinner menuSpinner;
 
+    @BindInt(R.integer.movies_async_task_loader_id)
+    public int moviesLoaderId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.bind(this);
         language = Resources.getSystem().getConfiguration().locale.getLanguage();
         resultActivityHandler = new ResultActivityHandler(new WeakReference<>(this));
 
@@ -64,8 +69,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initLoader() {
-        getSupportLoaderManager().initLoader(getResources().getInteger(R.integer.movies_async_task_loader_id),
-                getDefaultLoaderBundle(), this);
+        getSupportLoaderManager().initLoader(moviesLoaderId, getDefaultLoaderBundle(), this);
     }
 
     @Override
@@ -86,10 +90,9 @@ public class MainActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Bundle bundle = new Bundle();
                 bundle.putString(getString(R.string.sort_by_movies_bundle_key), getSortByParam(position));
-                bundle.putString(getString(R.string.language_bundle_key), language);
+                bundle.putString(getString(R.string.language_key), language);
                 getSupportLoaderManager()
-                        .restartLoader(getResources().getInteger(R.integer.movies_async_task_loader_id),
-                                bundle, MainActivity.this);
+                        .restartLoader(moviesLoaderId, bundle, MainActivity.this);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
@@ -142,8 +145,8 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings({"ConstantConditions", "NullableProblems"})
     @Override
     public Loader<MoviesResponse> onCreateLoader(int id, Bundle args) {
-        if (id == getResources().getInteger(R.integer.movies_async_task_loader_id)) {
-            return new MoviesAsyncTask(this, args);
+        if (id == moviesLoaderId) {
+            return new MoviesAsyncTaskLoader(this, args);
         }
         return null;
     }
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         Message message;
         if (data != null && data.getResults() != null) {
             message = resultActivityHandler
-                    .obtainMessage(COMPLETE_DATA_LOAD_HANDLER_CODE, data);
+                    .obtainMessage(COMPLETE_VIDEOS_LOAD_HANDLER_CODE, data);
         } else {
             message = resultActivityHandler
                     .obtainMessage(ERROR_DATA_LOAD_HANDLER_CODE);
@@ -195,12 +198,11 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 LoaderManager loaderManager = getSupportLoaderManager();
                 Loader loader = loaderManager
-                        .getLoader(getResources().getInteger(R.integer.movies_async_task_loader_id));
+                        .getLoader(moviesLoaderId);
                 if (loader == null) {
                     initLoader();
                 } else {
-                    getSupportLoaderManager().restartLoader(getResources()
-                                    .getInteger(R.integer.movies_async_task_loader_id),
+                    getSupportLoaderManager().restartLoader(moviesLoaderId,
                             getDefaultLoaderBundle(), MainActivity.this);
                 }
             }
@@ -212,19 +214,20 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.sort_by_movies_bundle_key), getSortByParam(
                 PrefUtils.readSortBySpinnerPositionFromSharedPref(MainActivity.this)));
-        bundle.putString(getString(R.string.language_bundle_key), language);
+        bundle.putString(getString(R.string.language_key), language);
         return bundle;
     }
 
     @Override
-    public void onMovieClick(Result movie) {
+    public void onMovieClick(MovieResult movie) {
         Intent intent = new Intent(MainActivity.this, DetailMovieActivity.class);
         intent.putExtra(getString(R.string.movie_intent_key), (Parcelable) movie);
+        intent.putExtra(getString(R.string.language_key), language);
         startActivity(intent);
     }
 
     static class ResultActivityHandler extends Handler {
-        static final int COMPLETE_DATA_LOAD_HANDLER_CODE = 222;
+        static final int COMPLETE_VIDEOS_LOAD_HANDLER_CODE = 222;
         static final int ERROR_DATA_LOAD_HANDLER_CODE = 333;
 
         private final WeakReference<MainActivity> reference;
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case COMPLETE_DATA_LOAD_HANDLER_CODE: {
+                case COMPLETE_VIDEOS_LOAD_HANDLER_CODE: {
                     MainActivity mainActivity = reference.get();
                     if (mainActivity != null) {
                         mainActivity.completeDataLoad((MoviesResponse) msg.obj);

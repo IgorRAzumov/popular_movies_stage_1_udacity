@@ -16,14 +16,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.Result;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.NetworkUtils;
 
 public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final List<Result> moviesList;
+    private final List<MovieResult> moviesList;
     private final RecyclerViewOnClickListener recyclerViewOnClickListener;
 
-    public MoviesResultAdapter(List<Result> moviesList, RecyclerViewOnClickListener recyclerViewOnClickListener) {
+    public MoviesResultAdapter(List<MovieResult> moviesList, RecyclerViewOnClickListener recyclerViewOnClickListener) {
         this.moviesList = moviesList;
         this.recyclerViewOnClickListener = recyclerViewOnClickListener;
     }
@@ -39,7 +39,7 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Result movie = moviesList.get(position);
+        MovieResult movie = moviesList.get(position);
         if (holder instanceof MovieResultHolder) {
             MovieResultHolder movieResultHolder = (MovieResultHolder) holder;
             movieResultHolder.bindPosterImage(holder.itemView.getContext(), movie.getPosterPath());
@@ -53,7 +53,7 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return moviesList.size();
     }
 
-    public Result getMovie(int position) {
+    public MovieResult getMovie(int position) {
         return moviesList.get(position);
     }
 

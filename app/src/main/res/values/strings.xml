@@ -10,7 +10,7 @@
     <string name="text_color_bundle_key" translatable="false">detail-movie-fragment-text-color-bundle-key</string>
     <string name="poster_bitmap_bundle_key" translatable="false">detail-movie-fragment-poster-bitmap-bundle-key</string>
     <string name="list_result_saved_position_position_bundle_key" translatable="false">list-result-saved-position-position-bundle-key</string>
-    <string name="language_bundle_key" translatable="false">language-bundle-key</string>
+    <string name="language_key" translatable="false">language-bundle-key</string>
     <string name="sort_by_movies_bundle_key" translatable="false">sort-by-movies-bundle-key</string>
 
     <string name="rating_vote_top_backslash" translatable="false">/10</string>
@@ -40,5 +40,6 @@
 
     <string name="fragment_movie_detail_release_date_tv_text">Release date : </string>
     <string name="fragment_movie_detail_vote_average_tv_text">Vote average : </string>
+    <string name="movie_id_bundle_key">movie-id-bundle-key</string>
 
 </resources>

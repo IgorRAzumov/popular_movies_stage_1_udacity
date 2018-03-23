@@ -34,7 +34,7 @@ public class MoviesResponse implements Serializable, Parcelable {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<Result> results = null;
+    private List<MovieResult> results = null;
 
     public MoviesResponse() {
     }
@@ -43,7 +43,7 @@ public class MoviesResponse implements Serializable, Parcelable {
         this.page = (Integer) in.readValue(Integer.class.getClassLoader());
         this.totalResults = (Integer) in.readValue(Integer.class.getClassLoader());
         this.totalPages = (Integer) in.readValue(Integer.class.getClassLoader());
-        this.results = in.createTypedArrayList(Result.CREATOR);
+        this.results = in.createTypedArrayList(MovieResult.CREATOR);
     }
 
     public Integer getPage() {
@@ -70,11 +70,11 @@ public class MoviesResponse implements Serializable, Parcelable {
         this.totalPages = totalPages;
     }
 
-    public List<Result> getResults() {
+    public List<MovieResult> getResults() {
         return results;
     }
 
-    public void setResults(List<Result> results) {
+    public void setResults(List<MovieResult> results) {
         this.results = results;
     }
 
