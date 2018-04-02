@@ -11,4 +11,11 @@
     <string name="error_load_data_message">Ошибка загрузки.Попробуйте еще.</string>
     <string name="fragment_movie_detail_movie_poster_image_description">постер фильма</string>
     <string name="fragment_movie_detail_star_vote_average_description">рейтинг</string>
+    <string name="fragment_detail_movie_review_retry_load">Повторить Загрузку</string>
+    <string name="fragment_movie_detail_no_reviews">Нет отзывов или рецензий</string>
+    <string name="movie_video_card_description">открыть в youtube</string>
+    <string name="menu_bt_nav_top_rated_text">Рейтинги</string>
+    <string name="menu_bt_nav_most_popular_text">Популярность</string>
+    <string name="menu_bt_nav_favorites_text">Закладки</string>
+    <string name="fragment_movie_detail_error_load_reviews">ошибка загрузки отзывов. Попробуйте еще раз.</string>
 </resources>

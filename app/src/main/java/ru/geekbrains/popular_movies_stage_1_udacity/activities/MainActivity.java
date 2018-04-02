@@ -3,148 +3,142 @@ package ru.geekbrains.popular_movies_stage_1_udacity.activities;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.ProgressBar;
 
-import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import butterknife.BindInt;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MoviesAsyncTaskLoader;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.fragments.ProgressBarFragment;
-import ru.geekbrains.popular_movies_stage_1_udacity.fragments.ResultFragment;
+import ru.geekbrains.popular_movies_stage_1_udacity.fragments.MoviesResultFragment;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.PrefUtils;
 
-import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN;
-import static ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity.ResultActivityHandler.COMPLETE_VIDEOS_LOAD_HANDLER_CODE;
-import static ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity.ResultActivityHandler.ERROR_DATA_LOAD_HANDLER_CODE;
 
 public class MainActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<MoviesResponse>,
-        ResultFragment.OnFragmentInteractionListener {
-    private String language;
-    private ResultActivityHandler resultActivityHandler;
+        implements LoaderManager.LoaderCallbacks,
+        MoviesResultFragment.OnFragmentInteractionListener,
+        BottomNavigationView.OnNavigationItemSelectedListener,
+        BottomNavigationView.OnNavigationItemReselectedListener,
+        NestedScrollView.OnScrollChangeListener {
 
-    private Spinner menuSpinner;
+    @BindView(R.id.bnv_main_activity_navigation)
+    BottomNavigationView bottomNavigationView;
+    @BindView(R.id.pb_activity_main_progress)
+    ProgressBar progressBar;
+    @BindView(R.id.nsv_main_activity_scroll_view)
+    NestedScrollView nestedScrollView;
 
     @BindInt(R.integer.movies_async_task_loader_id)
-    public int moviesLoaderId;
+    int moviesLoaderId;
+
+    private boolean isNavigationHide;
+    private boolean isBeforeSelectItem;
+    //  private int lastSelectedIdItemBotNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        language = Resources.getSystem().getConfiguration().locale.getLanguage();
-        resultActivityHandler = new ResultActivityHandler(new WeakReference<>(this));
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_main_activity_container);
-        if (fragment == null) {
-            fragmentManager.beginTransaction()
-                    .add(R.id.fl_main_activity_container, new ProgressBarFragment())
-                    .setTransition(TRANSIT_FRAGMENT_OPEN)
-                    .commit();
-        }
+        progressBar.setVisibility(View.VISIBLE);
 
-        initLoader();
+        nestedScrollView.setOnScrollChangeListener(this);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnNavigationItemReselectedListener(this);
+
+        getSupportLoaderManager().initLoader(moviesLoaderId, null, this);
+
+        int lastSelectedIdItemBotNav = PrefUtils.readBotNavSelectedItemSharedPref(this);
+        bottomNavigationView.setSelectedItemId(lastSelectedIdItemBotNav);
     }
 
-    private void initLoader() {
-        getSupportLoaderManager().initLoader(moviesLoaderId, getDefaultLoaderBundle(), this);
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+        bottomNavigationView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+                int itemId = item.getItemId();
+                switch (itemId) {
+                    case R.id.menu_bt_nav_favorites: {
+                        //return true;
+                    }
+                    default: {
+                        String sortBy = getString(itemId == R.id.menu_bt_nav_popular
+                                ? R.string.movies_request_param_sort_by_popular
+                                : R.string.movies_request_param_sort_by_top_rated);
+                        getSupportLoaderManager().restartLoader(moviesLoaderId, getLoaderBundle(sortBy),
+                                MainActivity.this);
+
+                    }
+                }
+            }
+        }, 100);
+        return true;
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_basic, menu);
-        MenuItem item = menu.findItem(R.id.action_switch_sort_by_spinner);
-
-
-        menuSpinner = (Spinner) item.getActionView();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.main_activity_menu_spinner_list_item_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        menuSpinner.setAdapter(adapter);
-        menuSpinner.setSelection(PrefUtils.readSortBySpinnerPositionFromSharedPref(this),
-                false);
-        menuSpinner.setOnItemSelectedListener((new AdapterView.OnItemSelectedListener() {
+    public void onNavigationItemReselected(@NonNull final MenuItem item) {
+        bottomNavigationView.postDelayed(new Runnable() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Bundle bundle = new Bundle();
-                bundle.putString(getString(R.string.sort_by_movies_bundle_key), getSortByParam(position));
-                bundle.putString(getString(R.string.language_key), language);
-                getSupportLoaderManager()
-                        .restartLoader(moviesLoaderId, bundle, MainActivity.this);
+            public void run() {
+                if (!isBeforeSelectItem) {
+                    int itemId = item.getItemId();
+                    switch (itemId) {
+                        default: {
+                            String sortBy = getString(itemId == R.id.menu_bt_nav_popular
+                                    ? R.string.movies_request_param_sort_by_popular
+                                    : R.string.movies_request_param_sort_by_top_rated);
+                            getSupportLoaderManager().restartLoader(moviesLoaderId, getLoaderBundle(sortBy),
+                                    MainActivity.this);
+                        }
 
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fl_main_activity_container, new ProgressBarFragment())
-                        .setTransition(TRANSIT_FRAGMENT_FADE)
-                        .commit();
-
+                    }
+                    isBeforeSelectItem = true;
+                }
             }
+        }, 300);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        }));
-        return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (menuSpinner != null) {
-            int position = PrefUtils.readSortBySpinnerPositionFromSharedPref(this);
-            if (position != menuSpinner.getSelectedItemPosition()) {
-                menuSpinner.setSelection(position, false);
-            }
 
-        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (menuSpinner != null) {
-            PrefUtils.writeSortBySpinnerPositionToSharedPref(this,
-                    menuSpinner.getSelectedItemPosition());
-        }
-    }
-
-    private String getSortByParam(int sortByPosition) {
-        String sortBy;
-        if (sortByPosition == getResources()
-                .getInteger(R.integer.movies_request_param_sort_by_most_popular_index_array)) {
-            sortBy = getString(R.string.movies_request_param_sort_by_most_popular);
-        } else {
-            sortBy = getString(R.string.movies_request_param_sort_by_top_rated);
-        }
-        return sortBy;
+        PrefUtils.writeBotNavSelectedItemToSharedPref(this,
+                bottomNavigationView.getSelectedItemId());
     }
 
     @SuppressWarnings({"ConstantConditions", "NullableProblems"})
+    @NonNull
     @Override
-    public Loader<MoviesResponse> onCreateLoader(int id, Bundle args) {
+    public Loader onCreateLoader(int id, @Nullable Bundle args) {
         if (id == moviesLoaderId) {
             return new MoviesAsyncTaskLoader(this, args);
         }
@@ -152,42 +146,44 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoadFinished(@NonNull Loader<MoviesResponse> loader, MoviesResponse data) {
-        Message message;
-        if (data != null && data.getResults() != null) {
-            message = resultActivityHandler
-                    .obtainMessage(COMPLETE_VIDEOS_LOAD_HANDLER_CODE, data);
-        } else {
-            message = resultActivityHandler
-                    .obtainMessage(ERROR_DATA_LOAD_HANDLER_CODE);
+    public void onLoadFinished(@NonNull Loader loader, Object data) {
+        if (loader.getId() == moviesLoaderId) {
+            if (data != null && data instanceof MoviesResponse) {
+                completeDataLoad((MoviesResponse) data);
+            } else {
+                errorDataLoad();
+            }
         }
-        resultActivityHandler.sendMessage(message);
     }
 
     @Override
-    public void onLoaderReset(@NonNull Loader<MoviesResponse> loader) {
+    public void onLoaderReset(@NonNull Loader loader) {
 
     }
 
     private void completeDataLoad(MoviesResponse moviesResponse) {
+        progressBar.setVisibility(View.INVISIBLE);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fl_main_activity_container);
+        Fragment fragment = fragmentManager
+                .findFragmentById(R.id.fl_main_activity_container);
 
-        if (fragment != null) {
-            if (fragment instanceof ProgressBarFragment) {
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fl_main_activity_container,
-                                ResultFragment.newInstance(this, moviesResponse))
-                        .setTransition(TRANSIT_FRAGMENT_FADE)
-                        .commit();
-            }
+        if (fragment != null && fragment instanceof MoviesResultFragment) {
+            ((MoviesResultFragment) fragment).setData(moviesResponse.getResults());
         } else {
-            fragmentManager.beginTransaction()
-                    .add(R.id.fl_main_activity_container,
-                            ResultFragment.newInstance(this, moviesResponse))
-                    .setTransition(TRANSIT_FRAGMENT_FADE)
-                    .commit();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if (fragment == null) {
+                fragmentTransaction.add(R.id.fl_main_activity_container,
+                        MoviesResultFragment.newInstance(this,
+                                new ArrayList<>(moviesResponse.getResults())));
+            } else {
+                fragmentTransaction.replace(R.id.fl_main_activity_container,
+                        MoviesResultFragment.newInstance(this,
+                                new ArrayList<>(moviesResponse.getResults())));
+            }
+            fragmentTransaction.setTransition(TRANSIT_FRAGMENT_OPEN);
+            fragmentTransaction.commit();
         }
+
     }
 
     private void errorDataLoad() {
@@ -200,21 +196,34 @@ public class MainActivity extends AppCompatActivity
                 Loader loader = loaderManager
                         .getLoader(moviesLoaderId);
                 if (loader == null) {
-                    initLoader();
+                    loaderManager.initLoader(moviesLoaderId, getLoaderBundle(
+                            PrefUtils.readSortByTypeFromSharedPref(
+                                    MainActivity.this)),
+                            MainActivity.this);
                 } else {
-                    getSupportLoaderManager().restartLoader(moviesLoaderId,
-                            getDefaultLoaderBundle(), MainActivity.this);
+                    loaderManager.restartLoader(moviesLoaderId,
+                            getLoaderBundle(PrefUtils.readSortByTypeFromSharedPref(
+                                    MainActivity.this)), MainActivity.this);
                 }
             }
         });
         snackbar.show();
     }
 
-    private Bundle getDefaultLoaderBundle() {
+    private void animateNavigation(final boolean hide) {
+        if (isNavigationHide && hide || !isNavigationHide && !hide) {
+            return;
+        }
+        isNavigationHide = hide;
+        int moveY = hide ? (2 * bottomNavigationView.getHeight()) : 0;
+        bottomNavigationView.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
+    }
+
+    private Bundle getLoaderBundle(String sortBy) {
         Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.sort_by_movies_bundle_key), getSortByParam(
-                PrefUtils.readSortBySpinnerPositionFromSharedPref(MainActivity.this)));
-        bundle.putString(getString(R.string.language_key), language);
+        bundle.putString(getString(R.string.sort_by_movies_bundle_key), sortBy);
+        bundle.putString(getString(R.string.language_key), Resources.getSystem().getConfiguration()
+                .locale.getLanguage());
         return bundle;
     }
 
@@ -222,43 +231,19 @@ public class MainActivity extends AppCompatActivity
     public void onMovieClick(MovieResult movie) {
         Intent intent = new Intent(MainActivity.this, DetailMovieActivity.class);
         intent.putExtra(getString(R.string.movie_intent_key), (Parcelable) movie);
-        intent.putExtra(getString(R.string.language_key), language);
         startActivity(intent);
     }
 
-    static class ResultActivityHandler extends Handler {
-        static final int COMPLETE_VIDEOS_LOAD_HANDLER_CODE = 222;
-        static final int ERROR_DATA_LOAD_HANDLER_CODE = 333;
-
-        private final WeakReference<MainActivity> reference;
-
-        private ResultActivityHandler(WeakReference<MainActivity> reference) {
-            this.reference = reference;
+    @Override
+    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY,
+                               int oldScrollX, int oldScrollY) {
+        if (scrollY < oldScrollY) { // up
+            animateNavigation(false);
         }
+        if (scrollY > oldScrollY) { // down
+            animateNavigation(true);
 
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case COMPLETE_VIDEOS_LOAD_HANDLER_CODE: {
-                    MainActivity mainActivity = reference.get();
-                    if (mainActivity != null) {
-                        mainActivity.completeDataLoad((MoviesResponse) msg.obj);
-                    }
-                    break;
-                }
-                case ERROR_DATA_LOAD_HANDLER_CODE: {
-                    MainActivity mainActivity = reference.get();
-                    if (mainActivity != null) {
-                        mainActivity.errorDataLoad();
-                        break;
-                    }
-                }
-                default: {
-                    super.handleMessage(msg);
-                }
-            }
         }
-
     }
 }
 

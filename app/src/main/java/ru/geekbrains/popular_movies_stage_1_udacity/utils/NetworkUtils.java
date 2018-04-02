@@ -11,13 +11,15 @@ import java.io.IOException;
 
 import retrofit2.Response;
 import ru.geekbrains.popular_movies_stage_1_udacity.BuildConfig;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieVideosResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewsResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieVideosResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.retrofit.RetrofitHelper;
 
 public class NetworkUtils {
     private static final String API_KEY = BuildConfig.API_KEY;
+
+    //https://img.youtube.com/vi/K_tLp7T6U1c/3.jpg
 
     public static MoviesResponse getMovies(String sortBy, String language) {
         MoviesResponse moviesResponse = null;
@@ -36,14 +38,14 @@ public class NetworkUtils {
         return moviesResponse;
     }
 
-    public static void LoadPosterImage(Context context, ImageView imageView, String posterUrl) {
+    public static void loadPosterImage(Context context, ImageView imageView, String posterUrl) {
         Picasso
                 .with(context)
                 .load(posterUrl)
                 .into(imageView);
     }
 
-    public static void LoadPosterImageInTarget(Context context, String posterUrl, Target target) {
+    public static void loadPosterImageInTarget(Context context, String posterUrl, Target target) {
         Picasso
                 .with(context)
                 .load(posterUrl)
@@ -56,7 +58,7 @@ public class NetworkUtils {
         try {
             Response<MovieVideosResponse> response = RetrofitHelper.getRetrofitHelper()
                     .getIPopularMoviesApi()
-                    .getVideos(movieId,  API_KEY, language)
+                    .getVideos(movieId, API_KEY, language)
                     .execute();
 
             if (response.isSuccessful()) {
@@ -85,5 +87,16 @@ public class NetworkUtils {
         return reviewsResponse;
     }
 
+    public static void loadYouTubeThumbnail(Context context, String videoId, ImageView imageView) {
+        Picasso
+                .with(context)
+                .load(buildYouTubeUrl(videoId))
+                .into(imageView);
+    }
 
+    private static String buildYouTubeUrl(String videoId) {
+        String youTubeBaseUrl = "http://img.youtube.com/vi/[video_id]/0.jpg";///////////////
+        String regexPattern = "\\[video_id\\]";
+        return youTubeBaseUrl.replaceAll(regexPattern, videoId);
+    }
 }

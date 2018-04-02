@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity">
 
+
     <FrameLayout
         android:id="@+id/fl_main_activity_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</LinearLayout>
+
+
+    <ProgressBar
+        android:id="@+id/pb_activity_main_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bnv_main_activity_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/overlay_dark_50"
+        app:itemIconTint="@drawable/color_state_light"
+        app:itemTextColor="@drawable/color_state_light"
+        app:menu="@menu/main_menu_bottom_navigation" />
+</FrameLayout>

@@ -11,19 +11,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MoviesResultAdapter;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.Utils;
 import ru.geekbrains.popular_movies_stage_1_udacity.widgets.SpacingItemDecoration;
 
 
-public class ResultFragment extends Fragment implements RecyclerViewOnClickListener {
+public class MoviesResultFragment extends Fragment implements RecyclerViewOnClickListener {
     private OnFragmentInteractionListener interactionListener;
     private MoviesResultAdapter moviesResultAdapter;
 
@@ -32,13 +34,13 @@ public class ResultFragment extends Fragment implements RecyclerViewOnClickListe
 
     private Unbinder unbinder;
 
-    public ResultFragment() {
+    public MoviesResultFragment() {
     }
 
-    public static ResultFragment newInstance(Context context, MoviesResponse moviesResponse) {
-        ResultFragment fragment = new ResultFragment();
+    public static MoviesResultFragment newInstance(Context context, ArrayList<MovieResult> movies) {
+        MoviesResultFragment fragment = new MoviesResultFragment();
         Bundle args = new Bundle();
-        args.putParcelable(context.getString(R.string.movies_response_bundle_key), moviesResponse);
+        args.putParcelableArrayList(context.getString(R.string.movies_response_bundle_key), movies);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,11 +49,12 @@ public class ResultFragment extends Fragment implements RecyclerViewOnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            MoviesResponse moviesResponse = getArguments()
-                    .getParcelable(getString(R.string.movies_response_bundle_key));
-            assert moviesResponse != null;
-            moviesResultAdapter = new MoviesResultAdapter(moviesResponse.getResults(),//we are checked moviesResponse.getResults() before put it bundle
-                    this);
+            ArrayList<MovieResult> movieResults = getArguments()
+                    .getParcelableArrayList(getString(R.string.movies_response_bundle_key));
+            /*{
+                check
+            }*/
+            moviesResultAdapter = new MoviesResultAdapter(movieResults, this);
         }
     }
 
@@ -131,6 +134,10 @@ public class ResultFragment extends Fragment implements RecyclerViewOnClickListe
     @Override
     public void onItemRecyclerClick(int position) {
         interactionListener.onMovieClick(moviesResultAdapter.getMovie(position));
+    }
+
+    public void setData(List<MovieResult> movies) {
+        moviesResultAdapter.setData(movies);
     }
 
     public interface OnFragmentInteractionListener {

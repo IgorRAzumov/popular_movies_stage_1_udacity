@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.geekbrains.popular_movies_stage_1_udacity.fragments.ResultFragment">
+    tools:context="ru.geekbrains.popular_movies_stage_1_udacity.fragments.MoviesResultFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_fragment_main_result"

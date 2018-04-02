@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <array name="main_activity_menu_spinner_list_item_array">
-        <item>@string/main_activity_menu_spinner_most_popular_item</item>
-        <item>@string/main_activity_menu_spinner_top_rated_item</item>
-    </array>
-</resources>

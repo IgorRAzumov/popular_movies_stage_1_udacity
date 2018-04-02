@@ -12,34 +12,42 @@
     <string name="list_result_saved_position_position_bundle_key" translatable="false">list-result-saved-position-position-bundle-key</string>
     <string name="language_key" translatable="false">language-bundle-key</string>
     <string name="sort_by_movies_bundle_key" translatable="false">sort-by-movies-bundle-key</string>
+    <string name="movie_id_bundle_key" translatable="false">movie-id-bundle-key</string>
 
-    <string name="rating_vote_top_backslash" translatable="false">/10</string>
-    <string name="error_on_activity_implement_fragment_listener" translatable="false">must implement OnFragmentInteractionListener</string>
+    <string name="rating_vote_top_rating" translatable="false">/10</string>
+
     <string name="empty" translatable="false"></string>
+    <string name="padding_new_text" translatable="false">\t</string>
+
 
     <string name="error_inbox_intent_data_movie" translatable="false">error inbox intent data movie</string>
-
+    <string name="error_on_activity_implement_fragment_listener" translatable="false">must implement OnFragmentInteractionListener</string>
 
     <string name="fragment_movie_detail_movie_poster_image_description">movie poster image</string>
     <string name="fragment_movie_detail_star_vote_average_description">vote average star</string>
 
-
-    <string name="movies_request_param_sort_by_most_popular" translatable="false">popular</string>
+    <string name="movies_request_param_sort_by_popular" translatable="false">popular</string>
     <string name="movies_request_param_sort_by_top_rated" translatable="false">top_rated</string>
 
     <string name="shared_pref_key_sort_by" translatable="false">default-shared-pref-key-sort-by</string>
+    <string name="shared_pref_key_bot_nav_selected_id" translatable="false">shared-pref-key-bot-nav-position</string>
 
     <string name="app_name">Your Movies</string>
     <string name="main_menu_spinner_title">SORT BY</string>
     <string name="activity_detail_movie_description">Film description</string>
     <string name="main_activity_menu_spinner_most_popular_item">MOST POPULAR</string>
     <string name="main_activity_menu_spinner_top_rated_item">TOP RATED</string>
-
     <string name="error_load_data_message">Error load data. Check network and try again.</string>
     <string name="main_activity_retry_load_data">RETRY</string>
-
     <string name="fragment_movie_detail_release_date_tv_text">Release date : </string>
     <string name="fragment_movie_detail_vote_average_tv_text">Vote average : </string>
-    <string name="movie_id_bundle_key">movie-id-bundle-key</string>
+    <string name="fragment_detail_movie_review_retry_load">Retry Load</string>
+    <string name="fragment_movie_detail_no_reviews">No Reviews</string>
+    <string name="fragment_movie_detail_error_load_reviews">Error load reviews. Check network and try again.</string>
+    <string name="movie_video_card_description">open in youtube</string>
+    <string name="menu_bt_nav_top_rated_text">Top Rated</string>
+    <string name="menu_bt_nav_most_popular_text">Popular</string>
+    <string name="menu_bt_nav_favorites_text">Favorites</string>
+
 
 </resources>
