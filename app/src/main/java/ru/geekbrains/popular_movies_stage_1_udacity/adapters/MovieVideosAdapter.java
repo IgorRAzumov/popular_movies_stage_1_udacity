@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.VideoResult;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.VideoResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.NetworkUtils;
 
 

@@ -34,30 +34,20 @@ import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MovieReviewsAdapter
 import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MovieVideosAdapter;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MovieReviewsAsyncTaskLoader;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MovieVideosAsyncTaskLoader;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieVideosResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.DisplayableMovie;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewResult;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewsResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.VideoResult;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.MovieVideosResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewResult;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewsResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.VideoResult;
+
 
 public class DetailMovieFragment extends Fragment implements LoaderManager.LoaderCallbacks,
         RecyclerViewOnClickListener {
-    private int backgroundColor;
-    private int titleTextColor;
-    private int bodyTextColor;
-    private String language;
-    private MovieResult movie;
-    private MovieReviewsAdapter reviewsAdapter;
-    private MovieVideosAdapter videosAdapter;
-    private Bitmap posterBitmap;
-
     @BindInt(R.integer.movie_videos_async_task_loader_id)
     int videosLoaderAsyncTaskId;
-
     @BindInt(R.integer.movie_reviews_async_task_loader_id)
     int reviewsLoaderAsyncTaskId;
-
     @BindView(R.id.tb_activity_detail_toolbar)
     Toolbar toolbar;
     @BindView(R.id.iv_fragment_detail_movie_poster_toolbar)
@@ -72,7 +62,6 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
     TextView movieVoteAverageText;
     @BindView(R.id.tv_fragment_detail_movies_plot_synopsis)
     TextView moviePlotSynopsisText;
-
     @BindView(R.id.pb_fragment_detail_movie_review_progress)
     ProgressBar reviewsProgressBar;
     @BindView(R.id.tv_fragment_detail_movie_review_result_load_info)
@@ -83,25 +72,31 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
     RecyclerView videosRecycler;
     @BindViews({R.id.lly_fragment_detail_movie_description_card, R.id.lly_fragment_detail_movie_main_card})
     List<LinearLayout> cardsBackgroundLayouts;
-
+    private int backgroundColor;
+    final ButterKnife.Action<View> SET_BACKGROUND_CARD = new ButterKnife.Action<View>() {
+        @Override
+        public void apply(View view, int index) {
+            view.setBackgroundColor(backgroundColor);
+        }
+    };
+    private int titleTextColor;
+    private int bodyTextColor;
+    private String language;
+    private DisplayableMovie movie;
+    private MovieReviewsAdapter reviewsAdapter;
+    private MovieVideosAdapter videosAdapter;
+    private Bitmap posterBitmap;
     private Unbinder unbinder;
+
 
     public DetailMovieFragment() {
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        loaderManager.initLoader(videosLoaderAsyncTaskId, getDefaultBundle(), this);
-        loaderManager.initLoader(reviewsLoaderAsyncTaskId, getDefaultBundle(), this);
-    }
-
     public static DetailMovieFragment newInstance(Context context, int backgroundColor,
                                                   int titleTextColor, int bodyTextColor,
                                                   String language, Bitmap bitmap,
-                                                  MovieResult movie) {
+                                                  DisplayableMovie movie) {
         Bundle bundle = new Bundle();
         bundle.putInt(context.getString(R.string.background_color_bundle_key),
                 backgroundColor);
@@ -120,7 +115,7 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
     }
 
     public static DetailMovieFragment newInstance(Context context, String language,
-                                                  Bitmap bitmap, MovieResult movie) {
+                                                  Bitmap bitmap, DisplayableMovie movie) {
         Bundle bundle = new Bundle();
         bundle.putString(context.getString(R.string.language_key), language);
         bundle.putParcelable(
@@ -130,6 +125,14 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         DetailMovieFragment detailMovieFragment = new DetailMovieFragment();
         detailMovieFragment.setArguments(bundle);
         return detailMovieFragment;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
+        loaderManager.initLoader(videosLoaderAsyncTaskId, getDefaultBundle(), this);
+        loaderManager.initLoader(reviewsLoaderAsyncTaskId, getDefaultBundle(), this);
     }
 
     @Override
@@ -159,14 +162,14 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         int noColorValue = getResources().getInteger(R.integer.detail_movie_fragment_no_color_value);
         if (backgroundColor != noColorValue && bodyTextColor != noColorValue
                 && titleTextColor != noColorValue) {
-           setBackgroundColors();
+            setBackgroundColors();
         }
 
         posterImage.setImageBitmap(posterBitmap);
-        movieOriginalNameText.setText(movie.getTitle());
-        movieReleaseDateText.append(movie.getReleaseDate());
-        movieVoteAverageText.append(String.valueOf(movie.getVoteAverage()));
-        moviePlotSynopsisText.append(movie.getOverview());
+        movieOriginalNameText.setText(movie.getMovieName());
+        movieReleaseDateText.append(movie.getMovieReleaseDate());
+        movieVoteAverageText.append(String.valueOf(movie.getMovieRating()));
+        moviePlotSynopsisText.append(movie.getMovieOverview());
 
         reviewsRecycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
@@ -175,6 +178,7 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         videosRecycler.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
         videosRecycler.setHasFixedSize(true);
+
         return view;
     }
 
@@ -191,6 +195,7 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         super.onDestroyView();
         unbinder.unbind();
     }
+
 
     private void initToolbar() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -213,7 +218,7 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         } else if (id == reviewsLoaderAsyncTaskId) {
             return new MovieReviewsAsyncTaskLoader(getContext(), args);
         }
-        return null;
+        throw new RuntimeException(getString(R.string.eeror_loader_not_impl) + id);
     }
 
     @Override
@@ -230,6 +235,8 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
             } else {
                 errorLoadReviews();
             }
+        } else {
+            throw new RuntimeException(getString(R.string.eeror_loader_not_impl) + loader.getId());
         }
     }
 
@@ -241,17 +248,10 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
 
     private Bundle getDefaultBundle() {
         Bundle bundle = new Bundle();
-        bundle.putInt(getString(R.string.movie_id_bundle_key), movie.getId());
+        bundle.putInt(getString(R.string.movie_id_bundle_key), movie.getMovieApiId());
         bundle.putString(getString(R.string.language_key), language);
         return bundle;
     }
-
-    final ButterKnife.Action<View> SET_BACKGROUND_CARD = new ButterKnife.Action<View>() {
-        @Override
-        public void apply(View view, int index) {
-            view.setBackgroundColor(backgroundColor);
-        }
-    };
 
 
     private void completeLoadVideos(List<VideoResult> results) {
@@ -283,8 +283,6 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
-
-
     private void errorLoadVideos() {
 
     }
@@ -304,4 +302,11 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
     public void onItemRecyclerClick(int position) {
 
     }
+
+    @Override
+    public void onFavoriteClick(int adapterPosition) {
+
+    }
+
+
 }

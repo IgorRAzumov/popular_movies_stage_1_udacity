@@ -4,9 +4,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieVideosResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewsResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.MovieVideosResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.MoviesResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewsResponse;
 
 
 public interface IPopularMoviesApi {

@@ -8,7 +8,7 @@
     <string name="fragment_movie_detail_release_date_tv_text">Даты выхода :</string>
     <string name="main_menu_spinner_title">СОРТИРОВКА РЕЗКЛЬТАТА</string>
     <string name="main_activity_retry_load_data">ПОВТОРИТЬ</string>
-    <string name="error_load_data_message">Ошибка загрузки.Попробуйте еще.</string>
+    <string name="error_load_data_message">Ошибка загрузки данных.Попробуйте еще.</string>
     <string name="fragment_movie_detail_movie_poster_image_description">постер фильма</string>
     <string name="fragment_movie_detail_star_vote_average_description">рейтинг</string>
     <string name="fragment_detail_movie_review_retry_load">Повторить Загрузку</string>

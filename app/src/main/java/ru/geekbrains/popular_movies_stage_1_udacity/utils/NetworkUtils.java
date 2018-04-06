@@ -11,9 +11,9 @@ import java.io.IOException;
 
 import retrofit2.Response;
 import ru.geekbrains.popular_movies_stage_1_udacity.BuildConfig;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieVideosResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MoviesResponse;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewsResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.MovieVideosResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.MoviesResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewsResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.retrofit.RetrofitHelper;
 
 public class NetworkUtils {

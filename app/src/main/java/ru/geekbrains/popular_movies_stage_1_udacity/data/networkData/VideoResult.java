@@ -1,4 +1,4 @@
-package ru.geekbrains.popular_movies_stage_1_udacity.data;
+package ru.geekbrains.popular_movies_stage_1_udacity.data.networkData;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

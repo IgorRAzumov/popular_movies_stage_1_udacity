@@ -8,11 +8,16 @@
 
     <integer name="detail_movie_fragment_no_color_value">0</integer>
 
-    <integer name="result_fragment_default_save_position">0</integer>
+    <integer name="result_fragment_rv_default_save_position">0</integer>
 
     <integer name="movies_async_task_loader_id">11</integer>
     <integer name="movie_videos_async_task_loader_id">21</integer>
     <integer name="movie_reviews_async_task_loader_id">22</integer>
 
     <integer name="movie_review_card_cont_text_count_lines">5</integer>
+    <integer name="movies_async_task_loader_db_id">33</integer>
+    <integer name="map_fragment_fab_duration">200</integer>
+    <integer name="main_activity_reques_code_favorite_status">1</integer>
+    <integer name="no_selected_position">-1</integer>
+    <integer name="main_activity_result_code_favorite_status">111</integer>
 </resources>

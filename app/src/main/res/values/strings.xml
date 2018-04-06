@@ -2,14 +2,14 @@
     <string name="poster_movie_base_url_w342" translatable="false">https://image.tmdb.org/t/p/w342</string>
     <string name="poster_movie_base_url_w185" translatable="false">https://image.tmdb.org/t/p/w185</string>
 
-    <string name="movies_response_bundle_key" translatable="false">movies-page-result-list-bundle-key</string>
+    <string name="movies_result_bundle_key" translatable="false">movies-result-bundle-key</string>
     <string name="movie_bundle_key" translatable="false">movie-bundle-key</string>
     <string name="movie_intent_key" translatable="false">movie-intent-key</string>
     <string name="background_color_bundle_key" translatable="false">detail-movie-fragment-background-color-bundle-key</string>
     <string name="title_color_bundle_key" translatable="false">detail-movie-fragment-title-color-bundle-key</string>
     <string name="text_color_bundle_key" translatable="false">detail-movie-fragment-text-color-bundle-key</string>
     <string name="poster_bitmap_bundle_key" translatable="false">detail-movie-fragment-poster-bitmap-bundle-key</string>
-    <string name="list_result_saved_position_position_bundle_key" translatable="false">list-result-saved-position-position-bundle-key</string>
+    <string name="result_fragment_rv_saved_position_bundle_key" translatable="false">list-result-saved-position-position-bundle-key</string>
     <string name="language_key" translatable="false">language-bundle-key</string>
     <string name="sort_by_movies_bundle_key" translatable="false">sort-by-movies-bundle-key</string>
     <string name="movie_id_bundle_key" translatable="false">movie-id-bundle-key</string>
@@ -37,7 +37,7 @@
     <string name="activity_detail_movie_description">Film description</string>
     <string name="main_activity_menu_spinner_most_popular_item">MOST POPULAR</string>
     <string name="main_activity_menu_spinner_top_rated_item">TOP RATED</string>
-    <string name="error_load_data_message">Error load data. Check network and try again.</string>
+    <string name="error_load_data_message">Error load data. Try again.</string>
     <string name="main_activity_retry_load_data">RETRY</string>
     <string name="fragment_movie_detail_release_date_tv_text">Release date : </string>
     <string name="fragment_movie_detail_vote_average_tv_text">Vote average : </string>
@@ -48,6 +48,16 @@
     <string name="menu_bt_nav_top_rated_text">Top Rated</string>
     <string name="menu_bt_nav_most_popular_text">Popular</string>
     <string name="menu_bt_nav_favorites_text">Favorites</string>
+    <string name="eeror_loader_not_impl">Loader Not Implemented:</string>
+    <string name="sql_selection_movie_api_id">movieApiId = ?</string>
+    <string name="error_fragment_instance_bundle">fragment instance bundle, must be not null</string>
+    <string name="no_network_search_result">There are no results that match your search</string>
+    <string name="main_activity_go_back">BACK</string>
+    <string name="no_database_search_result">No favorites movies</string>
+    <string name="ok">OK</string>
+    <string name="movie_position_key">movie-position-intent-key</string>
+    <string name="movie_update_favorite_key">movie_update_favorite_key</string>
+    <string name="movie_is_favorite_key">movie-is-favorite-key</string>
 
 
 </resources>

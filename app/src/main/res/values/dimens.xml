@@ -31,5 +31,7 @@
     <dimen name="movie_video_card_width">245dp</dimen>
     <dimen name="movie_video_card_height">170dp</dimen>
     <dimen name="fragment_detail_movie_reviews_lly_margin_top">-15dp</dimen>
+    <dimen name="map_fragment_float_button_margin">16dp</dimen>
+    <dimen name="card_movie_favorite_iv_padding">10dp</dimen>
 
 </resources>

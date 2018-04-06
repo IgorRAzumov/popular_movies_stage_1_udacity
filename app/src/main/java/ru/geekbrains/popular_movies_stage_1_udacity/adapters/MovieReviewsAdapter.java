@@ -9,13 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewResult;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewResult;
 
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.MovieResultHolder> {
     private List<ReviewResult> reviewsResult;

@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_large"
                 android:layout_marginRight="@dimen/spacing_large"
-  app:cardCornerRadius="@dimen/fragment_detail_movie_name_card_corner_radius"
+                app:cardCornerRadius="@dimen/fragment_detail_movie_name_card_corner_radius"
                 app:cardElevation="@dimen/fragment_detail_movie_name_card_elevation">
 
                 <LinearLayout

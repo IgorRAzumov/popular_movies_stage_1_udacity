@@ -13,14 +13,14 @@
             android:id="@+id/iv_movie_video_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/movie_video_card_description"/>
+            android:contentDescription="@string/movie_video_card_description" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_play_youtube"
             android:layout_gravity="center"
-            android:contentDescription="@string/movie_video_card_description"/>
+            android:contentDescription="@string/movie_video_card_description"
+            app:srcCompat="@drawable/ic_play_youtube" />
     </FrameLayout>
 
 </android.support.v7.widget.CardView>

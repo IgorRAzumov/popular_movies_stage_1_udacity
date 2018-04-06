@@ -19,28 +19,26 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MoviesResultAdapter;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.MovieResult;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.DisplayableMovie;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.Utils;
 import ru.geekbrains.popular_movies_stage_1_udacity.widgets.SpacingItemDecoration;
 
 
-public class MoviesResultFragment extends Fragment implements RecyclerViewOnClickListener {
-    private OnFragmentInteractionListener interactionListener;
-    private MoviesResultAdapter moviesResultAdapter;
-
+public class MoviesResultFragment extends Fragment
+        implements MoviesResultAdapter.RecycleViewOnItemClickListener {
     @BindView(R.id.rv_fragment_main_result)
     RecyclerView resultRecycler;
-
+    private OnFragmentInteractionListener interactionListener;
+    private MoviesResultAdapter moviesResultAdapter;
     private Unbinder unbinder;
 
     public MoviesResultFragment() {
     }
 
-    public static MoviesResultFragment newInstance(Context context, ArrayList<MovieResult> movies) {
+    public static MoviesResultFragment newInstance(Context context, ArrayList<DisplayableMovie> movies) {
         MoviesResultFragment fragment = new MoviesResultFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(context.getString(R.string.movies_response_bundle_key), movies);
+        args.putParcelableArrayList(context.getString(R.string.movies_result_bundle_key), movies);
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,12 +47,12 @@ public class MoviesResultFragment extends Fragment implements RecyclerViewOnClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            ArrayList<MovieResult> movieResults = getArguments()
-                    .getParcelableArrayList(getString(R.string.movies_response_bundle_key));
-            /*{
-                check
-            }*/
+            ArrayList<DisplayableMovie> movieResults = getArguments()
+                    .getParcelableArrayList(getString(R.string.movies_result_bundle_key));
             moviesResultAdapter = new MoviesResultAdapter(movieResults, this);
+        } else {
+            throw new RuntimeException(getString(R.string.error_fragment_instance_bundle)
+                    + this.getClass().getName());
         }
     }
 
@@ -63,20 +61,14 @@ public class MoviesResultFragment extends Fragment implements RecyclerViewOnClic
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initResultRecycler();
 
+        initResultRecycler();
         if (savedInstanceState != null) {
-            int defaultSavedPosition = getResources()
-                    .getInteger(R.integer.result_fragment_default_save_position);
-            int savedPosition = savedInstanceState.getInt(
-                    getString(R.string.list_result_saved_position_position_bundle_key),
-                    defaultSavedPosition);
-            if (savedPosition != defaultSavedPosition) {
-                resultRecycler.getLayoutManager().scrollToPosition(savedPosition);
-            }
+            restoreResultRecyclerPosition(savedInstanceState);
         }
         return view;
     }
+
 
     private void initResultRecycler() {
         boolean isPortraitOrientation = getResources()
@@ -113,7 +105,7 @@ public class MoviesResultFragment extends Fragment implements RecyclerViewOnClic
         RecyclerView.LayoutManager layoutManager = resultRecycler.getLayoutManager();
         if (resultRecycler != null && layoutManager instanceof GridLayoutManager) {
             GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
-            outState.putInt(getString(R.string.list_result_saved_position_position_bundle_key),
+            outState.putInt(getString(R.string.result_fragment_rv_saved_position_bundle_key),
                     gridLayoutManager.findLastCompletelyVisibleItemPosition());
         }
         super.onSaveInstanceState(outState);
@@ -132,15 +124,45 @@ public class MoviesResultFragment extends Fragment implements RecyclerViewOnClic
     }
 
     @Override
-    public void onItemRecyclerClick(int position) {
-        interactionListener.onMovieClick(moviesResultAdapter.getMovie(position));
+    public void onItemResultRecyclerClick(DisplayableMovie movie) {
+        interactionListener.onMovieClick(movie);
     }
 
-    public void setData(List<MovieResult> movies) {
+    @Override
+    public void onFavoriteClick(DisplayableMovie movie) {
+        interactionListener.onFavoriteClick(movie);
+    }
+
+    public void setData(List<DisplayableMovie> movies) {
         moviesResultAdapter.setData(movies);
     }
 
+    private void restoreResultRecyclerPosition(Bundle savedInstanceState) {
+        int defaultSavedPosition = getResources()
+                .getInteger(R.integer.result_fragment_rv_default_save_position);
+        int savedPosition = savedInstanceState.getInt(
+                getString(R.string.result_fragment_rv_saved_position_bundle_key),
+                defaultSavedPosition);
+        if (savedPosition != defaultSavedPosition) {
+            resultRecycler.getLayoutManager().scrollToPosition(savedPosition);
+        }
+    }
+
+    public void deleteMovieFromFavorite(DisplayableMovie displayableMovie, boolean isFromFavorite) {
+        moviesResultAdapter.deleteMovie(displayableMovie, isFromFavorite);
+    }
+
+    public void addMovieToFavorite(DisplayableMovie displayableMovie) {
+        moviesResultAdapter.addMovieFromFavorite(displayableMovie);
+    }
+
+    public void updateFavoriteStatus(DisplayableMovie movie, boolean isFavorite) {
+        moviesResultAdapter.updateFavoriteStatus(movie, isFavorite);
+    }
+
     public interface OnFragmentInteractionListener {
-        void onMovieClick(MovieResult movie);
+        void onMovieClick(DisplayableMovie movie);
+
+        void onFavoriteClick(DisplayableMovie movie);
     }
 }

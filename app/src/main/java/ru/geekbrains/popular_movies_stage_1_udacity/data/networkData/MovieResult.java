@@ -1,4 +1,4 @@
-package ru.geekbrains.popular_movies_stage_1_udacity.data;
+package ru.geekbrains.popular_movies_stage_1_udacity.data.networkData;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -86,6 +86,17 @@ public class MovieResult implements Serializable, Parcelable {
         this.adult = (Boolean) in.readValue(Boolean.class.getClassLoader());
         this.overview = in.readString();
         this.releaseDate = in.readString();
+    }
+
+    public MovieResult(Integer id, String name, String overview, String posterPath,
+                       Double voteAverage, String releaseDate) {
+        this.id = id;
+        this.title = name;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+
     }
 
     public Integer getVoteCount() {

@@ -10,6 +10,7 @@ public class RetrofitHelper {
     private final static RetrofitHelper RETROFIT_HELPER = new RetrofitHelper();
     private static final String POPULAR_MOVIES_SEARCH_URL = "https://api.themoviedb.org/3/";
     private static IPopularMoviesApi iPopularMoviesApi;
+
     private RetrofitHelper() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(POPULAR_MOVIES_SEARCH_URL)

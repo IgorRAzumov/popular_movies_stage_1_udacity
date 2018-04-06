@@ -2,7 +2,6 @@ package ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders;
 
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.content.AsyncTaskLoader;
 
 

@@ -6,19 +6,12 @@
     android:layout_height="match_parent"
     tools:context="ru.geekbrains.popular_movies_stage_1_udacity.activities.MainActivity">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/nsv_main_activity_scroll_view"
+    <FrameLayout
+        android:id="@+id/fl_main_activity_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:scrollingCache="true">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 
-        <FrameLayout
-            android:id="@+id/fl_main_activity_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </android.support.v4.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/pb_activity_main_progress"

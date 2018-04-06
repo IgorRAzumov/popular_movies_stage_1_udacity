@@ -68,5 +68,12 @@
                     android:textColor="@color/yellow_A700" />
             </LinearLayout>
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_card_movie_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/card_movie_favorite_iv_padding" />
     </FrameLayout>
 </android.support.v7.widget.CardView>

@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.ReviewsResponse;
+import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewsResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.NetworkUtils;
 
 

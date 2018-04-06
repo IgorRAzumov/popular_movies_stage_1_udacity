@@ -30,6 +30,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
+        <provider
+            android:name=".data.databaseData.MoviesContentProvider"
+            android:authorities="ru.geekbrains.popular_movies_stage_1_udacity"
+            android:exported="false" />
     </application>
 
 </manifest>
