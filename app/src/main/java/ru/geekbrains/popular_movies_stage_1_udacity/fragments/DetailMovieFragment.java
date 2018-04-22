@@ -1,11 +1,13 @@
 package ru.geekbrains.popular_movies_stage_1_udacity.fragments;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.ActionBar;
@@ -24,7 +26,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -35,7 +36,6 @@ import ru.geekbrains.popular_movies_stage_1_udacity.adapters.MovieVideosAdapter;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MovieReviewsAsyncTaskLoader;
 import ru.geekbrains.popular_movies_stage_1_udacity.asyncTaskLoaders.MovieVideosAsyncTaskLoader;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.DisplayableMovie;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.MovieVideosResponse;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewsResponse;
@@ -43,42 +43,56 @@ import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.VideoResult
 
 
 public class DetailMovieFragment extends Fragment implements LoaderManager.LoaderCallbacks,
-        RecyclerViewOnClickListener {
-    @BindInt(R.integer.movie_videos_async_task_loader_id)
-    int videosLoaderAsyncTaskId;
-    @BindInt(R.integer.movie_reviews_async_task_loader_id)
-    int reviewsLoaderAsyncTaskId;
+        MovieVideosAdapter.RecycleViewOnItemClickListener {
+    private static final int VIDEOS_LOADER_ID = 21;
+    private static final int REVIEWS_LOADER_ID = 22;
+
     @BindView(R.id.tb_activity_detail_toolbar)
     Toolbar toolbar;
+
     @BindView(R.id.iv_fragment_detail_movie_poster_toolbar)
     ImageView posterImage;
+
     @BindView(R.id.rv_fragment_detail_movie_reviews)
     RecyclerView reviewsRecycler;
+    private final ButterKnife.Action<View> SET_BACKGROUND_CARD = new ButterKnife.Action<View>() {
+        @Override
+        public void apply(View view, int index) {
+            view.setBackgroundColor(backgroundColor);
+        }
+    };
+    @BindView(R.id.rv_fragment_detail_movie_videos)
+    RecyclerView videosRecycler;
+    @BindView(R.id.lly_fragment_detail_movie_videos_load_info)
+    LinearLayout videosLoadInfoLayout;
+
     @BindView(R.id.tv_fragment_detail_movies_name)
     TextView movieOriginalNameText;
     @BindView(R.id.tv_fragment_detail_movies_release_date)
     TextView movieReleaseDateText;
     @BindView(R.id.tv_fragment_detail_movies_vote_average)
     TextView movieVoteAverageText;
+    @BindView(R.id.lly_fragment_detail_movie_reviews_load_info)
+    LinearLayout reviewsLoadInfoLayout;
     @BindView(R.id.tv_fragment_detail_movies_plot_synopsis)
     TextView moviePlotSynopsisText;
+    @BindView(R.id.tv_fragment_detail_movie_videos_load_info)
+    TextView videosLoadInfoText;
+    @BindView(R.id.tv_fragment_detail_movie_review_load_info)
+    TextView reviewsLoadInfoText;
     @BindView(R.id.pb_fragment_detail_movie_review_progress)
     ProgressBar reviewsProgressBar;
-    @BindView(R.id.tv_fragment_detail_movie_review_result_load_info)
-    TextView movieReviewsLoadInfoText;
+    @BindView(R.id.pb_fragment_detail_movie_videos_progress)
+    ProgressBar videosProgressBar;
     @BindView(R.id.bt_fragment_detail_movie_review_retry_load)
     Button retryLoadReviewsButton;
-    @BindView(R.id.rv_fragment_detail_movie_videos)
-    RecyclerView videosRecycler;
+
     @BindViews({R.id.lly_fragment_detail_movie_description_card, R.id.lly_fragment_detail_movie_main_card})
     List<LinearLayout> cardsBackgroundLayouts;
+
     private int backgroundColor;
-    final ButterKnife.Action<View> SET_BACKGROUND_CARD = new ButterKnife.Action<View>() {
-        @Override
-        public void apply(View view, int index) {
-            view.setBackgroundColor(backgroundColor);
-        }
-    };
+    @BindView(R.id.bt_fragment_detail_movie_videos_retry_load)
+    Button retryLoadVideosButton;
     private int titleTextColor;
     private int bodyTextColor;
     private String language;
@@ -87,40 +101,30 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
     private MovieVideosAdapter videosAdapter;
     private Bitmap posterBitmap;
     private Unbinder unbinder;
+    private OnFragmentInteractionListener interactionListener;
 
 
     public DetailMovieFragment() {
 
     }
 
-    public static DetailMovieFragment newInstance(Context context, int backgroundColor,
-                                                  int titleTextColor, int bodyTextColor,
-                                                  String language, Bitmap bitmap,
-                                                  DisplayableMovie movie) {
-        Bundle bundle = new Bundle();
-        bundle.putInt(context.getString(R.string.background_color_bundle_key),
-                backgroundColor);
-        bundle.putInt(context.getString(R.string.title_color_bundle_key),
-                titleTextColor);
-        bundle.putInt(context.getString(R.string.text_color_bundle_key),
-                bodyTextColor);
-        bundle.putString(context.getString(R.string.language_key), language);
-        bundle.putParcelable(
-                context.getString(R.string.poster_bitmap_bundle_key), bitmap);
-        bundle.putParcelable(context.getString(R.string.movie_bundle_key), movie);
-
-        DetailMovieFragment detailMovieFragment = new DetailMovieFragment();
-        detailMovieFragment.setArguments(bundle);
-        return detailMovieFragment;
-    }
-
-    public static DetailMovieFragment newInstance(Context context, String language,
-                                                  Bitmap bitmap, DisplayableMovie movie) {
+    public static DetailMovieFragment newInstance(Context context, String language, Bitmap bitmap,
+                                                  DisplayableMovie movie, int backgroundColor,
+                                                  int titleTextColor, int bodyTextColor) {
         Bundle bundle = new Bundle();
         bundle.putString(context.getString(R.string.language_key), language);
         bundle.putParcelable(
                 context.getString(R.string.poster_bitmap_bundle_key), bitmap);
         bundle.putParcelable(context.getString(R.string.movie_bundle_key), movie);
+
+        if (backgroundColor != 0 && bodyTextColor != 0 && titleTextColor != 0) {
+            bundle.putInt(context.getString(R.string.background_color_bundle_key),
+                    backgroundColor);
+            bundle.putInt(context.getString(R.string.title_color_bundle_key),
+                    titleTextColor);
+            bundle.putInt(context.getString(R.string.text_color_bundle_key),
+                    bodyTextColor);
+        }
 
         DetailMovieFragment detailMovieFragment = new DetailMovieFragment();
         detailMovieFragment.setArguments(bundle);
@@ -130,25 +134,23 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LoaderManager loaderManager = getActivity().getSupportLoaderManager();
-        loaderManager.initLoader(videosLoaderAsyncTaskId, getDefaultBundle(), this);
-        loaderManager.initLoader(reviewsLoaderAsyncTaskId, getDefaultBundle(), this);
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            LoaderManager loaderManager = activity.getSupportLoaderManager();
+            loaderManager.initLoader(VIDEOS_LOADER_ID, getDefaultBundle(), this);
+            loaderManager.initLoader(REVIEWS_LOADER_ID, getDefaultBundle(), this);
+        }
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            Bundle args = getArguments();
-            backgroundColor = args.getInt(getString(R.string.background_color_bundle_key),
-                    getResources().getInteger(R.integer.detail_movie_fragment_no_color_value));
-            titleTextColor = args.getInt(getString(R.string.title_color_bundle_key),
-                    getResources().getInteger(R.integer.detail_movie_fragment_no_color_value));
-            bodyTextColor = args.getInt(getString(R.string.text_color_bundle_key),
-                    getResources().getInteger(R.integer.detail_movie_fragment_no_color_value));
-            language = args.getString(getString(R.string.language_key));
-            posterBitmap = args.getParcelable(getString(R.string.poster_bitmap_bundle_key));
-            movie = args.getParcelable(getString(R.string.movie_bundle_key));
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            getDataFromArguments(bundle);
+        } else {
+            throw new RuntimeException(getString(R.string.error_fragment_instance_bundle) +
+                    DetailMovieFragment.class.getSimpleName());
         }
     }
 
@@ -157,37 +159,27 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
         unbinder = ButterKnife.bind(this, view);
-        initToolbar();
 
-        int noColorValue = getResources().getInteger(R.integer.detail_movie_fragment_no_color_value);
-        if (backgroundColor != noColorValue && bodyTextColor != noColorValue
-                && titleTextColor != noColorValue) {
-            setBackgroundColors();
-        }
-
-        posterImage.setImageBitmap(posterBitmap);
-        movieOriginalNameText.setText(movie.getMovieName());
-        movieReleaseDateText.append(movie.getMovieReleaseDate());
-        movieVoteAverageText.append(String.valueOf(movie.getMovieRating()));
-        moviePlotSynopsisText.append(movie.getMovieOverview());
-
-        reviewsRecycler.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false));
-        reviewsRecycler.setHasFixedSize(true);
-
-        videosRecycler.setLayoutManager(new LinearLayoutManager(getContext(),
-                LinearLayoutManager.HORIZONTAL, false));
-        videosRecycler.setHasFixedSize(true);
-
+        initUi();
         return view;
     }
 
-    private void setBackgroundColors() {
-        ButterKnife.apply(cardsBackgroundLayouts, SET_BACKGROUND_CARD);
-        movieOriginalNameText.setTextColor(titleTextColor);
-        movieReleaseDateText.setTextColor(bodyTextColor);
-        movieVoteAverageText.setTextColor(bodyTextColor);
-        moviePlotSynopsisText.setTextColor(bodyTextColor);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof DetailMovieFragment.OnFragmentInteractionListener) {
+            interactionListener = (DetailMovieFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + getString(R.string.error_on_activity_implement_fragment_listener));
+        }
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        interactionListener = null;
     }
 
     @Override
@@ -196,6 +188,95 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         unbinder.unbind();
     }
 
+
+    @NonNull
+    @Override
+    public Loader onCreateLoader(final int id, @Nullable Bundle args) {
+        switch (id) {
+            case VIDEOS_LOADER_ID: {
+                return new MovieVideosAsyncTaskLoader(getContext(), args);
+            }
+            case REVIEWS_LOADER_ID: {
+                return new MovieReviewsAsyncTaskLoader(getContext(), args);
+            }
+            default: {
+                throw new RuntimeException(getString(R.string.error_loader_not_impl) + id);
+            }
+        }
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader loader, Object data) {
+        switch (loader.getId()) {
+            case VIDEOS_LOADER_ID: {
+                if (data != null) {
+                    completeLoadVideos(((MovieVideosResponse) data).getResults());
+                } else {
+                    errorLoadVideos();
+                }
+                break;
+            }
+            case REVIEWS_LOADER_ID: {
+                if (data != null) {
+                    completeLoadReviews(((ReviewsResponse) data).getResults());
+                } else {
+                    errorLoadReviews();
+                }
+                break;
+            }
+            default: {
+                throw new RuntimeException(getString(R.string.error_loader_not_impl) + loader.getId());
+            }
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader loader) {
+
+    }
+
+    @Override
+    public void onItemVideoRecyclerClick(int position) {
+        interactionListener.openVideo(videosAdapter.getVideo(position).getKey());
+    }
+
+    public void setData(Bitmap posterImage, DisplayableMovie movie, int backgroundColor,
+                        int titleTextColor, int bodyTextColor) {
+        posterBitmap = posterImage;
+        this.movie = movie;
+        this.backgroundColor = backgroundColor;
+        this.titleTextColor = titleTextColor;
+        this.bodyTextColor = bodyTextColor;
+    }
+
+    private Bundle getDefaultBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(getString(R.string.movie_id_bundle_key), movie.getMovieApiId());
+        bundle.putString(getString(R.string.language_key), language);
+        return bundle;
+    }
+
+    private void getDataFromArguments(@NonNull Bundle args) {
+        Resources resources = getResources();
+        backgroundColor = args.getInt(getString(R.string.background_color_bundle_key),
+                resources.getInteger(R.integer.detail_movie_fragment_no_color_value));
+        titleTextColor = args.getInt(getString(R.string.title_color_bundle_key),
+                resources.getInteger(R.integer.detail_movie_fragment_no_color_value));
+        bodyTextColor = args.getInt(getString(R.string.text_color_bundle_key),
+                resources.getInteger(R.integer.detail_movie_fragment_no_color_value));
+        language = args.getString(getString(R.string.language_key));
+        posterBitmap = args.getParcelable(getString(R.string.poster_bitmap_bundle_key));
+        movie = args.getParcelable(getString(R.string.movie_bundle_key));
+    }
+
+    private void initUi() {
+        initToolbar();
+        initRecyclers();
+        initButtons();
+        setColors();
+        showMovieData();
+    }
 
     private void initToolbar() {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -209,104 +290,114 @@ public class DetailMovieFragment extends Fragment implements LoaderManager.Loade
         }
     }
 
+    private void initRecyclers() {
+        reviewsRecycler.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+        reviewsRecycler.setHasFixedSize(true);
+
+        videosRecycler.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+        videosRecycler.setHasFixedSize(true);
+
+    }
+
+    private void initButtons() {
+        retryLoadVideosButton.setOnClickListener(getRetryLoadOnClickListener());
+        retryLoadReviewsButton.setOnClickListener(getRetryLoadOnClickListener());
+    }
 
     @NonNull
-    @Override
-    public Loader onCreateLoader(final int id, @Nullable Bundle args) {
-        if (id == videosLoaderAsyncTaskId) {
-            return new MovieVideosAsyncTaskLoader(getContext(), args);
-        } else if (id == reviewsLoaderAsyncTaskId) {
-            return new MovieReviewsAsyncTaskLoader(getContext(), args);
-        }
-        throw new RuntimeException(getString(R.string.eeror_loader_not_impl) + id);
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader loader, Object data) {
-        if (loader.getId() == videosLoaderAsyncTaskId) {
-            if (data != null && data instanceof MovieVideosResponse) {
-                completeLoadVideos(((MovieVideosResponse) data).getResults());
-            } else {
-                errorLoadVideos();
+    private View.OnClickListener getRetryLoadOnClickListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentActivity activity = getActivity();
+                if (activity != null) {
+                    int loaderId;
+                    if (v.getId() == R.id.bt_fragment_detail_movie_videos_retry_load) {
+                        loaderId = VIDEOS_LOADER_ID;
+                        retryLoadVideosButton.setVisibility(View.GONE);
+                        videosLoadInfoLayout.setVisibility(View.GONE);
+                        videosProgressBar.setVisibility(View.VISIBLE);
+                    } else {
+                        loaderId = REVIEWS_LOADER_ID;
+                        retryLoadReviewsButton.setVisibility(View.GONE);
+                        reviewsLoadInfoLayout.setVisibility(View.GONE);
+                        reviewsProgressBar.setVisibility(View.VISIBLE);
+                    }
+                    activity.getSupportLoaderManager().restartLoader(loaderId, getDefaultBundle()
+                            , DetailMovieFragment.this);
+                }
             }
-        } else if (loader.getId() == reviewsLoaderAsyncTaskId) {
-            if (data != null && data instanceof ReviewsResponse) {
-                completeReviewsLoad(((ReviewsResponse) data).getResults());
-            } else {
-                errorLoadReviews();
-            }
-        } else {
-            throw new RuntimeException(getString(R.string.eeror_loader_not_impl) + loader.getId());
+        };
+    }
+
+    private void setColors() {
+        int noColorValue = getResources().getInteger(R.integer.detail_movie_fragment_no_color_value);
+        if (backgroundColor != noColorValue && bodyTextColor != noColorValue
+                && titleTextColor != noColorValue) {
+            ButterKnife.apply(cardsBackgroundLayouts, SET_BACKGROUND_CARD);
+            movieOriginalNameText.setTextColor(titleTextColor);
+            movieReleaseDateText.setTextColor(bodyTextColor);
+            movieVoteAverageText.setTextColor(bodyTextColor);
+            moviePlotSynopsisText.setTextColor(bodyTextColor);
         }
     }
 
-
-    @Override
-    public void onLoaderReset(@NonNull Loader loader) {
-
+    private void showMovieData() {
+        posterImage.setImageBitmap(posterBitmap);
+        movieOriginalNameText.setText(movie.getMovieName());
+        movieReleaseDateText.append(movie.getMovieReleaseDate());
+        movieVoteAverageText.append(String.valueOf(movie.getMovieRating()));
+        moviePlotSynopsisText.append(movie.getMovieOverview());
     }
-
-    private Bundle getDefaultBundle() {
-        Bundle bundle = new Bundle();
-        bundle.putInt(getString(R.string.movie_id_bundle_key), movie.getMovieApiId());
-        bundle.putString(getString(R.string.language_key), language);
-        return bundle;
-    }
-
 
     private void completeLoadVideos(List<VideoResult> results) {
+        videosProgressBar.setVisibility(View.GONE);
         if (results != null) {
             if (results.size() == 0) {
-
+                videosLoadInfoLayout.setVisibility(View.VISIBLE);
+                videosLoadInfoText.setText(R.string.fragment_movie_detail_no_videos);
             } else {
                 videosAdapter = new MovieVideosAdapter(results, this);
                 videosRecycler.setAdapter(videosAdapter);
             }
         } else {
-
+            errorLoadVideos();
         }
     }
 
-    public void completeReviewsLoad(@Nullable List<ReviewResult> results) {
+    private void completeLoadReviews(@Nullable List<ReviewResult> results) {
         reviewsProgressBar.setVisibility(View.GONE);
         if (results != null) {
             if (results.size() == 0) {
-                movieReviewsLoadInfoText.setVisibility(View.VISIBLE);
-                movieReviewsLoadInfoText.setText(R.string.fragment_movie_detail_no_reviews);
+                reviewsLoadInfoLayout.setVisibility(View.VISIBLE);
+                reviewsLoadInfoText.setText(R.string.fragment_movie_detail_no_reviews);
             } else {
                 reviewsAdapter = new MovieReviewsAdapter(results);
                 reviewsRecycler.setAdapter(reviewsAdapter);
-
             }
         } else {
-            showErrorReviewsLoadMessage();
+            errorLoadReviews();
         }
     }
 
     private void errorLoadVideos() {
-
+        videosProgressBar.setVisibility(View.GONE);
+        videosLoadInfoLayout.setVisibility(View.VISIBLE);
+        retryLoadVideosButton.setVisibility(View.VISIBLE);
+        videosLoadInfoText.setText(R.string.fragment_movie_detail_error_load_videos);
     }
 
-    public void errorLoadReviews() {
+    private void errorLoadReviews() {
         reviewsProgressBar.setVisibility(View.GONE);
-        showErrorReviewsLoadMessage();
-    }
-
-    public void showErrorReviewsLoadMessage() {
-        movieReviewsLoadInfoText.setVisibility(View.VISIBLE);
+        reviewsLoadInfoLayout.setVisibility(View.VISIBLE);
         retryLoadReviewsButton.setVisibility(View.VISIBLE);
-        movieReviewsLoadInfoText.setText(R.string.fragment_movie_detail_error_load_reviews);
+        reviewsLoadInfoText.setText(R.string.fragment_movie_detail_error_load_reviews);
     }
 
-    @Override
-    public void onItemRecyclerClick(int position) {
+    public interface OnFragmentInteractionListener {
+        void openVideo(String url);
 
     }
-
-    @Override
-    public void onFavoriteClick(int adapterPosition) {
-
-    }
-
-
 }

@@ -18,18 +18,24 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/spacing_large" />
 
-        <TextView
-            android:id="@+id/tv_movies_review_card_text_content"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="@integer/movie_review_card_cont_text_count_lines"
-            android:minLines="@integer/movie_review_card_cont_text_count_lines"
-            android:paddingEnd="@dimen/movie_review_card_cont_text_padding_end"
-            android:paddingStart="@dimen/movie_review_card_cont_text_padding_start"
-            android:scrollbars="vertical"
-            android:text="\t"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@android:color/black" />
+            android:scrollbars="vertical">
+
+            <TextView
+                android:id="@+id/tv_movies_review_card_text_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="@integer/movie_review_card_cont_text_count_lines"
+                android:minLines="@integer/movie_review_card_cont_text_count_lines"
+                android:paddingEnd="@dimen/movie_review_card_cont_text_padding_end"
+                android:paddingStart="@dimen/movie_review_card_cont_text_padding_start"
+                android:scrollbars="vertical"
+                android:text="@string/padding_new_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@android:color/black" />
+        </ScrollView>
 
         <View
             android:layout_width="match_parent"

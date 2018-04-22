@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 
+@SuppressWarnings("unused")
 public class VideoResult implements Serializable {
     @SerializedName("id")
     @Expose

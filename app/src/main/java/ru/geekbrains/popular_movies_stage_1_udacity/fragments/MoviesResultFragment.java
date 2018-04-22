@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ public class MoviesResultFragment extends Fragment
         implements MoviesResultAdapter.RecycleViewOnItemClickListener {
     @BindView(R.id.rv_fragment_main_result)
     RecyclerView resultRecycler;
+
     private OnFragmentInteractionListener interactionListener;
     private MoviesResultAdapter moviesResultAdapter;
     private Unbinder unbinder;
@@ -35,7 +37,8 @@ public class MoviesResultFragment extends Fragment
     public MoviesResultFragment() {
     }
 
-    public static MoviesResultFragment newInstance(Context context, ArrayList<DisplayableMovie> movies) {
+    public static MoviesResultFragment newInstance(Context context,
+                                                   ArrayList<DisplayableMovie> movies) {
         MoviesResultFragment fragment = new MoviesResultFragment();
         Bundle args = new Bundle();
         args.putParcelableArrayList(context.getString(R.string.movies_result_bundle_key), movies);
@@ -83,7 +86,7 @@ public class MoviesResultFragment extends Fragment
                 isPortraitOrientation
                         ? getResources().getInteger(R.integer.result_fragment_grid_span_count_portrait)
                         : getResources().getInteger(R.integer.result_fragment_grid_span_count_landscape),
-                Utils.dpToPx(getContext(),
+                Utils.dpToPx(Objects.requireNonNull(getContext()),
                         getResources().getInteger(R.integer.result_fragment_recycler_item_decorator_spacing)),
                 true));
         resultRecycler.setHasFixedSize(true);
@@ -124,8 +127,8 @@ public class MoviesResultFragment extends Fragment
     }
 
     @Override
-    public void onItemResultRecyclerClick(DisplayableMovie movie) {
-        interactionListener.onMovieClick(movie);
+    public void onItemResultRecyclerClick(DisplayableMovie movie, int moviePosition) {
+        interactionListener.onMovieClick(movie, moviePosition);
     }
 
     @Override
@@ -135,6 +138,13 @@ public class MoviesResultFragment extends Fragment
 
     public void setData(List<DisplayableMovie> movies) {
         moviesResultAdapter.setData(movies);
+    }
+
+    public void clearData() {
+        moviesResultAdapter.clearData();
+        moviesResultAdapter.notifyDataSetChanged();
+        /*resultRecycler.clearOnScrollListeners();
+        resultRecycler.invalidate();*/
     }
 
     private void restoreResultRecyclerPosition(Bundle savedInstanceState) {
@@ -156,12 +166,12 @@ public class MoviesResultFragment extends Fragment
         moviesResultAdapter.addMovieFromFavorite(displayableMovie);
     }
 
-    public void updateFavoriteStatus(DisplayableMovie movie, boolean isFavorite) {
-        moviesResultAdapter.updateFavoriteStatus(movie, isFavorite);
+    public void updateMovieFavoriteStatus(int position, boolean isFromFavorite) {
+        moviesResultAdapter.updateMovieFavoriteStatus(position, isFromFavorite);
     }
 
     public interface OnFragmentInteractionListener {
-        void onMovieClick(DisplayableMovie movie);
+        void onMovieClick(DisplayableMovie movie, int moviePosition);
 
         void onFavoriteClick(DisplayableMovie movie);
     }

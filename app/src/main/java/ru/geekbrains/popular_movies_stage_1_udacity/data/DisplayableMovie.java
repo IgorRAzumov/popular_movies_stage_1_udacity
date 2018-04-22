@@ -15,15 +15,15 @@ public class DisplayableMovie implements Parcelable {
             return new DisplayableMovie[size];
         }
     };
-    private Integer movieApiId;
-    private String movieName;
-    private Double movieRating;
-    private String movieOverview;
-    private String moviePosterPath;
-    private String movieReleaseDate;
+    private final Integer movieApiId;
+    private final String movieName;
+    private final Double movieRating;
+    private final String movieOverview;
+    private final String moviePosterPath;
+    private final String movieReleaseDate;
     private boolean isFavorite;
 
-    protected DisplayableMovie(Parcel in) {
+    private DisplayableMovie(Parcel in) {
         this.movieApiId = (Integer) in.readValue(Integer.class.getClassLoader());
         this.movieName = in.readString();
         this.movieRating = (Double) in.readValue(Double.class.getClassLoader());
@@ -74,7 +74,7 @@ public class DisplayableMovie implements Parcelable {
     }
 
     public void setFavorite(boolean favorite) {
-       isFavorite = favorite;
+        isFavorite = favorite;
     }
 
     @Override

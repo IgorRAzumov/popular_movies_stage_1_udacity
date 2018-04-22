@@ -28,11 +28,11 @@ import android.support.annotation.NonNull;
 
 
 public class MoviesContentProvider extends ContentProvider {
-    public static final int MOVIES = 100;
+    private static final int MOVIES = 100;
     private static final UriMatcher uriMatcher = buildUriMatcher();
     private MoviesDbHelper moviesDbHelper;
 
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS, MOVIES);
         return uriMatcher;
@@ -50,8 +50,12 @@ public class MoviesContentProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase database = moviesDbHelper.getWritableDatabase();
         int match = uriMatcher.match(uri);
+
+
         Uri returnUri;
-        switch (match) {
+        switch (match)
+
+        {
             case MOVIES: {
                 long id = database.insert(MoviesContract.MovieEntry.TABLE_NAME,
                         null, values);
@@ -59,14 +63,19 @@ public class MoviesContentProvider extends ContentProvider {
                     returnUri =
                             ContentUris.withAppendedId(MoviesContract.MovieEntry.CONTENT_URI, id);
                 } else {
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    throw new android.database.SQLException(
+                            "error_insert_movie_db" + uri);
                 }
                 break;
             }
             default:
-                throw new UnsupportedOperationException("Unknown uri: " + uri);
+                throw new UnsupportedOperationException("Unknown uri" + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+
+        Context context = getContext();
+        if (context != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return returnUri;
     }
 
@@ -92,7 +101,11 @@ public class MoviesContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
         }
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        Context context = getContext();
+        if (context != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return cursor;
     }
 
@@ -112,7 +125,9 @@ public class MoviesContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
         }
-        if (moviesDeleted != 0) {
+
+        Context context = getContext();
+        if (moviesDeleted != 0 && context != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return moviesDeleted;

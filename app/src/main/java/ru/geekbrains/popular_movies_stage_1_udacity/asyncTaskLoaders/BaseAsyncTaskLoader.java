@@ -5,10 +5,10 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 
-public abstract class BaseAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
+abstract class BaseAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
     private T result;
 
-    public BaseAsyncTaskLoader(Context context) {
+    BaseAsyncTaskLoader(Context context) {
         super(context);
     }
 
@@ -16,7 +16,7 @@ public abstract class BaseAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
     public abstract T loadInBackground();
 
 
-    public void startLoad() {
+    void startLoad() {
         if (result != null) {
             deliverResult(result);
         } else {

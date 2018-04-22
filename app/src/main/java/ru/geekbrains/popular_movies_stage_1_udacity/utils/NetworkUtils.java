@@ -19,8 +19,6 @@ import ru.geekbrains.popular_movies_stage_1_udacity.retrofit.RetrofitHelper;
 public class NetworkUtils {
     private static final String API_KEY = BuildConfig.API_KEY;
 
-    //https://img.youtube.com/vi/K_tLp7T6U1c/3.jpg
-
     public static MoviesResponse getMovies(String sortBy, String language) {
         MoviesResponse moviesResponse = null;
         try {
@@ -38,19 +36,19 @@ public class NetworkUtils {
         return moviesResponse;
     }
 
-    public static void loadPosterImage(Context context, ImageView imageView, String posterUrl) {
+    public static void loadPosterImage(Context context, ImageView imageView, String posterPath) {
         Picasso
                 .with(context)
-                .load(posterUrl)
+                .load(UriUtils.getPosterImageUri(posterPath))
                 .into(imageView);
     }
+
 
     public static void loadPosterImageInTarget(Context context, String posterUrl, Target target) {
         Picasso
                 .with(context)
-                .load(posterUrl)
+                .load(UriUtils.getBigPosterImageUri(posterUrl))
                 .into(target);
-
     }
 
     public static MovieVideosResponse getVideos(int movieId, String language) {
@@ -90,13 +88,7 @@ public class NetworkUtils {
     public static void loadYouTubeThumbnail(Context context, String videoId, ImageView imageView) {
         Picasso
                 .with(context)
-                .load(buildYouTubeUrl(videoId))
+                .load(UriUtils.getYouTubeThumbnailUri(videoId))
                 .into(imageView);
-    }
-
-    private static String buildYouTubeUrl(String videoId) {
-        String youTubeBaseUrl = "http://img.youtube.com/vi/[video_id]/0.jpg";///////////////
-        String regexPattern = "\\[video_id\\]";
-        return youTubeBaseUrl.replaceAll(regexPattern, videoId);
     }
 }

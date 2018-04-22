@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import static ru.geekbrains.popular_movies_stage_1_udacity.data.databaseData.MoviesContract.MovieEntry;
 
-public class MoviesDbHelper extends SQLiteOpenHelper {
+class MoviesDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "movies.db";
 
@@ -19,7 +19,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        final String SQL_CREATE_WAITLIST_TABLE =
+        final String SQL_CREATE_FAVORITE_MOVIES_TABLE =
                 "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                         MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                         MovieEntry.COLUMN_MOVIE_API_ID + " INTEGER NOT NULL UNIQUE, " +
@@ -32,7 +32,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
 
                         " UNIQUE (" + MovieEntry.COLUMN_MOVIE_API_ID + ") ON CONFLICT REPLACE);";
 
-        sqLiteDatabase.execSQL(SQL_CREATE_WAITLIST_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_FAVORITE_MOVIES_TABLE);
     }
 
     @Override

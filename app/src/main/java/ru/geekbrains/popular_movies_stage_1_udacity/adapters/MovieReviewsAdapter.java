@@ -17,8 +17,7 @@ import ru.geekbrains.popular_movies_stage_1_udacity.R;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.ReviewResult;
 
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.MovieResultHolder> {
-    private List<ReviewResult> reviewsResult;
-
+    private final List<ReviewResult> reviewsResult;
 
     public MovieReviewsAdapter(List<ReviewResult> results) {
         reviewsResult = results;

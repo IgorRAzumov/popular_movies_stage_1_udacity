@@ -20,7 +20,7 @@ import ru.geekbrains.popular_movies_stage_1_udacity.utils.NetworkUtils;
 
 public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final RecycleViewOnItemClickListener recyclerViewOnClickListener;
-    private List<DisplayableMovie> moviesList;
+    private final List<DisplayableMovie> moviesList;
 
     public MoviesResultAdapter(List<DisplayableMovie> moviesList,
                                RecycleViewOnItemClickListener recyclerViewOnClickListener) {
@@ -57,7 +57,6 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     public void setData(List<DisplayableMovie> movies) {
-        moviesList.clear();
         moviesList.addAll(movies);
         notifyDataSetChanged();
     }
@@ -68,7 +67,6 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             moviesList.remove(position);
             notifyItemRemoved(position);
         } else {
-           // moviesList.get(position).setFavorite(false);
             movie.setFavorite(false);
             notifyItemChanged(position);
         }
@@ -76,25 +74,32 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addMovieFromFavorite(DisplayableMovie movie) {
         int position = moviesList.indexOf(movie);
-      movie.setFavorite(true);
-       // moviesList.get(position).setFavorite(true);
+        movie.setFavorite(true);
         notifyItemChanged(position);
     }
 
-    public void updateFavoriteStatus(DisplayableMovie movie, boolean isFavorite) {
-        int position = moviesList.indexOf(movie);
-
-        if (isFavorite != moviesList.get(position).isFavorite()) {
-            moviesList.get(position).setFavorite(isFavorite);
+    public void updateMovieFavoriteStatus(int position, boolean isFromFavorite) {
+        DisplayableMovie movie = moviesList.get(position);
+        boolean oldFavoriteStatus = movie.isFavorite();
+        if (isFromFavorite && oldFavoriteStatus) {
+            moviesList.remove(position);
+            notifyItemRemoved(position);
+        } else {
+            movie.setFavorite(!oldFavoriteStatus);
             notifyItemChanged(position);
         }
     }
 
+    public void clearData() {
+        moviesList.clear();
+    }
+
     public interface RecycleViewOnItemClickListener {
-        void onItemResultRecyclerClick(DisplayableMovie movie);
+        void onItemResultRecyclerClick(DisplayableMovie movie, int moviePosition);
 
         void onFavoriteClick(DisplayableMovie movie);
     }
+
 
     class MovieResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.iv_card_movie_favorite)
@@ -115,8 +120,7 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         void bindPosterImage(Context context, String posterPath) {
-            String posterUrl = context.getString(R.string.poster_movie_base_url_w185) + posterPath;
-            NetworkUtils.loadPosterImage(context, moviePoster, posterUrl);
+            NetworkUtils.loadPosterImage(context, moviePoster, posterPath);
         }
 
         void bindMovieTitle(String title) {
@@ -130,16 +134,17 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onClick(View v) {
+            int adapterPosition = getAdapterPosition();
             if (v.getId() == R.id.iv_card_movie_favorite) {
-                //    bindFavorite((int) isFavoriteImage.getTag() == R.drawable.ic_add_favorite);
-                recyclerViewOnClickListener.onFavoriteClick(moviesList.get(getAdapterPosition()));
+                recyclerViewOnClickListener.onFavoriteClick(moviesList.get(adapterPosition));
             } else {
+
                 recyclerViewOnClickListener.onItemResultRecyclerClick(
-                        moviesList.get(getAdapterPosition()));
+                        moviesList.get(adapterPosition), adapterPosition);
             }
         }
 
-        public void bindFavorite(boolean isFavorite) {
+        void bindFavorite(boolean isFavorite) {
             if (isFavorite) {
                 isFavoriteImage.setImageResource(R.drawable.ic_remove_favorite);
                 isFavoriteImage.setTag(R.drawable.ic_remove_favorite);

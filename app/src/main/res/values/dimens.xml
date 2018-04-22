@@ -9,29 +9,33 @@
     <dimen name="card_movie_height">240dp</dimen>
     <dimen name="card_movie_rating_tv_padding">3dp</dimen>
 
-    <dimen name="fragment_detail_movie_collapsing_toolbar_height">350dp</dimen>
+    <dimen name="fragment_detail_movie_collapsing_toolbar_height">344dp</dimen>
     <dimen name="fragment_detail_movie_toolbar_content_insertStars">0dp</dimen>
-    <dimen name="fragment_detail_movie_main_card_margin_top">-16dp</dimen>
-    <dimen name="fragment_detail_movie_name_card_corner_radius">2dp</dimen>
-    <dimen name="fragment_detail_movie_name_card_elevation">2dp</dimen>
-    <dimen name="fragment_detail_movie_plot_synopsis_card_corner_radius">2dp</dimen>
-    <dimen name="fragment_detail_movie_plot_synopsis_card_elevation">2dp</dimen>
-    <dimen name="fragment_detail_movie_reviews_card_corner_radius">2dp</dimen>
-    <dimen name="fragment_detail_movie_reviews_card_elevation">2dp</dimen>
-    <dimen name="fragment_detail_movie_error_layout_pad_top">15dp</dimen>
+    <dimen name="fragment_detail_movie_name_card_corner_radius">3dp</dimen>
+    <dimen name="fragment_detail_movie_name_card_elevation">3dp</dimen>
+    <dimen name="fragment_detail_movie_plot_synopsis_card_corner_radius">3dp</dimen>
+    <dimen name="fragment_detail_movie_plot_synopsis_card_elevation">3dp</dimen>
 
-    <dimen name="movie_review_card_width">250dp</dimen>
+
+    <dimen name="movie_review_card_width">240dp</dimen>
     <dimen name="movie_review_card_margin">5dp</dimen>
     <dimen name="movie_review_card_cont_text_padding_end">5dp</dimen>
-    <dimen name="movie_review_card_corner_radius">3dp</dimen>
+    <dimen name="movie_review_card_corner_radius">2dp</dimen>
     <dimen name="movie_review_card_elevation">3dp</dimen>
     <dimen name="movie_review_card_auth_text_padding_end">5dp</dimen>
     <dimen name="movie_review_card_cont_text_padding_start">5dp</dimen>
 
-    <dimen name="movie_video_card_width">245dp</dimen>
-    <dimen name="movie_video_card_height">170dp</dimen>
-    <dimen name="fragment_detail_movie_reviews_lly_margin_top">-15dp</dimen>
+    <dimen name="movie_video_card_width">240dp</dimen>
+    <dimen name="movie_video_card_height">168dp</dimen>
+    <dimen name="fragment_detail_movie_reviews_lly_margin_top">-16dp</dimen>
     <dimen name="map_fragment_float_button_margin">16dp</dimen>
-    <dimen name="card_movie_favorite_iv_padding">10dp</dimen>
+    <dimen name="card_movie_favorite_iv_padding">16dp</dimen>
+    <dimen name="movie_video_card_corner_radius">3dp</dimen>
+    <dimen name="movie_video_card_elevation">2dp</dimen>
+    <dimen name="fragment_movie_detail_lly_descrip_cd_padding_bottom">8dp</dimen>
+    <dimen name="fragment_detail_movie_error_layout_margin">24dp</dimen>
+    <dimen name="fragment_detail_movie_progress_margin">40dp</dimen>
+    <dimen name="fragment_detail_movie_plot_synopsis_margin_top">-16dp</dimen>
+    <dimen name="fragment_detail_content_margin_top">-32dp</dimen>
 
 </resources>

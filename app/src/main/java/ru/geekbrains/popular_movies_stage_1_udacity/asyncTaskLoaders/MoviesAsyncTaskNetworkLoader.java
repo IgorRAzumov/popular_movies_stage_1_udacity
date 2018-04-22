@@ -43,8 +43,11 @@ public class MoviesAsyncTaskNetworkLoader extends BaseAsyncTaskLoader<Displayabl
     @Override
     public DisplayableDataMovies loadInBackground() {
         MoviesResponse moviesResponse = NetworkUtils.getMovies(sortBy, language);
-        List<DisplayableMovie> movies = new ArrayList<>();
+        if (moviesResponse == null) {
+            return null;
+        }
 
+        List<DisplayableMovie> movies = new ArrayList<>();
         List<Integer> apiIdFavoriteList = new ArrayList<>();
         Cursor cursor = DbMoviesUtils.getAllFavoritesApiId(getContext());
         while (cursor.moveToNext()) {

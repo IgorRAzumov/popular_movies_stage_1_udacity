@@ -5,9 +5,8 @@ import android.provider.BaseColumns;
 
 public class MoviesContract {
     public static final String AUTHORITY = "ru.geekbrains.popular_movies_stage_1_udacity";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_TASKS = "movies";
-
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     public static final class MovieEntry implements BaseColumns {
         public static final Uri CONTENT_URI =

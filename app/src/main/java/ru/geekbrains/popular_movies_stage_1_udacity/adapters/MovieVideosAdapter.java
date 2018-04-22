@@ -13,17 +13,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ru.geekbrains.popular_movies_stage_1_udacity.R;
-import ru.geekbrains.popular_movies_stage_1_udacity.data.RecyclerViewOnClickListener;
 import ru.geekbrains.popular_movies_stage_1_udacity.data.networkData.VideoResult;
 import ru.geekbrains.popular_movies_stage_1_udacity.utils.NetworkUtils;
 
 
 public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.VideoResultHolder> {
-    private List<VideoResult> videosResult;
-    private RecyclerViewOnClickListener recyclerClickListener;
+    private final List<VideoResult> videosResult;
+    private final RecycleViewOnItemClickListener recyclerClickListener;
 
     public MovieVideosAdapter(List<VideoResult> videosResult,
-                              RecyclerViewOnClickListener recyclerClickListener) {
+                              RecycleViewOnItemClickListener recyclerClickListener) {
         this.videosResult = videosResult;
         this.recyclerClickListener = recyclerClickListener;
     }
@@ -51,6 +50,14 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
                 : videosResult.size();
     }
 
+    public VideoResult getVideo(int position) {
+        return videosResult.get(position);
+    }
+
+    public interface RecycleViewOnItemClickListener {
+        void onItemVideoRecyclerClick(int position);
+    }
+
     class VideoResultHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.iv_movie_video_card)
         ImageView movieVideo;
@@ -71,7 +78,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
 
         @Override
         public void onClick(View view) {
-            recyclerClickListener.onItemRecyclerClick(getAdapterPosition());
+            recyclerClickListener.onItemVideoRecyclerClick(getAdapterPosition());
         }
     }
 }
