@@ -96,9 +96,12 @@
                     android:id="@+id/bt_fragment_detail_movie_videos_retry_load"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    style="?attr/borderlessButtonStyle"
+                    android:layout_gravity="end"
                     android:text="@string/fragment_detail_movie_retry_load"
-                    android:visibility="gone" />
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/yellow_A700"
+                    android:visibility="gone"/>
             </LinearLayout>
         </FrameLayout>
 
@@ -171,10 +174,11 @@
                     android:id="@+id/bt_fragment_detail_movie_review_retry_load"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|end"
-                    android:background="@android:color/transparent"
+                    style="?attr/borderlessButtonStyle"
                     android:text="@string/fragment_detail_movie_retry_load"
-                    android:visibility="gone" />
+                    android:layout_gravity="end"
+                    android:textColor="@color/yellow_A700"
+                    android:visibility="gone"/>
             </LinearLayout>
         </FrameLayout>
     </LinearLayout>

@@ -8,7 +8,6 @@ import ru.geekbrains.popular_movies_stage_1_udacity.R;
 
 
 public class PrefUtils {
-
     public static void writeBotNavSelectedItemToSharedPref(Context context, int id) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();

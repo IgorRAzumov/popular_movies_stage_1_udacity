@@ -122,6 +122,9 @@ public class DetailMovieActivity extends AppCompatActivity
         };
     }
 
+
+
+
     private void initFloatButton() {
         int idImageResource;
         if ((movie.isFavorite() && isFavoriteStatusChange) ||
@@ -166,13 +169,13 @@ public class DetailMovieActivity extends AppCompatActivity
     }
 
     private void startPosterLoad() {
-        loadPosterImage();
         progressBar.setVisibility(View.VISIBLE);
+        loadPosterImage();
     }
 
     private void loadPosterImage() {
         NetworkUtils.loadPosterImageInTarget(DetailMovieActivity.this, movie.getMoviePosterPath(),
-                target);
+                target, R.drawable.default_poster_image);
     }
 
     private void completeDataLoad(Bitmap posterImage, @Nullable Palette.Swatch swatch) {

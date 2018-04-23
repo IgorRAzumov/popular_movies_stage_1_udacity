@@ -10,7 +10,7 @@ public class SpacingItemDecoration extends RecyclerView.ItemDecoration {
     private final int spacingPx;
     private final boolean includeEdge;
 
-    @SuppressWarnings("SameParameterValue")
+
     public SpacingItemDecoration(int spanCount, int spacingPx, boolean includeEdge) {
         this.spanCount = spanCount;
         this.spacingPx = spacingPx;

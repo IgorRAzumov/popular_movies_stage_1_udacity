@@ -328,8 +328,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @NonNull
     private Snackbar getSnackbar(String message, int lengthLong) {
-        final Snackbar snackbar = Snackbar.make(coordinatorLayout,
-                message, lengthLong);
+        final Snackbar snackbar = Snackbar.make(coordinatorLayout, message, lengthLong);
         View view = snackbar.getView();
         view.setLayoutParams(getLayoutParamsTopNavigation(view));
         return snackbar;

@@ -51,11 +51,8 @@ public class MoviesContentProvider extends ContentProvider {
         final SQLiteDatabase database = moviesDbHelper.getWritableDatabase();
         int match = uriMatcher.match(uri);
 
-
         Uri returnUri;
-        switch (match)
-
-        {
+        switch (match) {
             case MOVIES: {
                 long id = database.insert(MoviesContract.MovieEntry.TABLE_NAME,
                         null, values);
@@ -74,7 +71,7 @@ public class MoviesContentProvider extends ContentProvider {
 
         Context context = getContext();
         if (context != null) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            context.getContentResolver().notifyChange(uri, null);
         }
         return returnUri;
     }
@@ -104,7 +101,7 @@ public class MoviesContentProvider extends ContentProvider {
 
         Context context = getContext();
         if (context != null) {
-            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+            cursor.setNotificationUri(context.getContentResolver(), uri);
         }
         return cursor;
     }
@@ -128,7 +125,7 @@ public class MoviesContentProvider extends ContentProvider {
 
         Context context = getContext();
         if (moviesDeleted != 0 && context != null) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            context.getContentResolver().notifyChange(uri, null);
         }
         return moviesDeleted;
     }
