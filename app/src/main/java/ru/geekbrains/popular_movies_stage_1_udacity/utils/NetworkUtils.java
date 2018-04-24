@@ -44,12 +44,10 @@ public class NetworkUtils {
     }
 
 
-    public static void loadPosterImageInTarget(Context context, String posterUrl, Target target,
-                                               int defaultImageResId) {
+    public static void loadPosterImageInTarget(Context context, String posterUrl, Target target) {
         Picasso
                 .with(context)
                 .load(UriUtils.getBigPosterImageUri(posterUrl))
-                .error(defaultImageResId)
                 .into(target);
     }
 

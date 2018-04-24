@@ -175,7 +175,7 @@ public class DetailMovieActivity extends AppCompatActivity
 
     private void loadPosterImage() {
         NetworkUtils.loadPosterImageInTarget(DetailMovieActivity.this, movie.getMoviePosterPath(),
-                target, R.drawable.default_poster_image);
+                target);
     }
 
     private void completeDataLoad(Bitmap posterImage, @Nullable Palette.Swatch swatch) {
