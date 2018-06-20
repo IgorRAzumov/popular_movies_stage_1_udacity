@@ -3,7 +3,7 @@
     <integer name="movies_card_movie_name_text_view_max_line">1</integer>
 
     <integer name="result_fragment_grid_span_count_portrait">2</integer>
-    <integer name="result_fragment_grid_span_count_landscape">3</integer>
+    <integer name="result_fragment_grid_span_count_landscape">4</integer>
     <integer name="result_fragment_recycler_item_decorator_spacing">3</integer>
 
     <integer name="detail_movie_fragment_no_color_value">0</integer>
@@ -13,4 +13,6 @@
     <integer name="movie_review_card_cont_text_count_lines">5</integer>
     <integer name="no_selected_position">-1</integer>
     <integer name="main_activity_result_code_favorite_status">111</integer>
+    <integer name="movie_result_fr_rv_item_scale_factor">140</integer>
+    <integer name="min_count_grid_span">2</integer>
 </resources>

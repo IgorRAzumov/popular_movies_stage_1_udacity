@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        selectedNavItemId = PrefUtils.readBotNavSelectedItemSharedPref(MainActivity.this);
+        unitUi();
+
         if (savedInstanceState == null) {
             progressBar.setVisibility(View.VISIBLE);
         }
 
-        selectedNavItemId = PrefUtils.readBotNavSelectedItemSharedPref(MainActivity.this);
-        setNavItemsListeners();
-        bottomNavigationView.setSelectedItemId(selectedNavItemId);
     }
 
     @Override
@@ -129,22 +129,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public void onFavoriteClick(DisplayableMovie movie) {
+    public void favoriteStatusChange(DisplayableMovie movie) {
+        if (movie.isFavorite()) {
+            DbMoviesUtils.deleteFromFavoriteByApiId(this, movie.getMovieApiId());
+        } else {
+            DbMoviesUtils.addToFavorites(this, movie);
+        }
+
         Fragment fragment = getSupportFragmentManager()
                 .findFragmentById(R.id.fl_main_activity_container);
         if (fragment != null && fragment instanceof MoviesResultFragment) {
-            if (movie.isFavorite()) {
-                DbMoviesUtils.deleteFromFavoriteByApiId(this, movie.getMovieApiId());
-
-                ((MoviesResultFragment) fragment).deleteMovieFromFavorite(movie,
-                        bottomNavigationView.getSelectedItemId() == R.id.menu_bt_nav_favorites);
-            } else {
-                DbMoviesUtils.addToFavorites(this, movie);
-                ((MoviesResultFragment) fragment).addMovieToFavorite(movie);
-            }
+            updateResultFragment(movie, (MoviesResultFragment) fragment);
         }
     }
 
+    public void updateResultFragment(DisplayableMovie movie, MoviesResultFragment fragment) {
+        if (movie.isFavorite()) {
+            fragment.deleteMovieFromFavorite(movie,
+                    bottomNavigationView.getSelectedItemId() == R.id.menu_bt_nav_favorites);
+        } else {
+            fragment.addMovieToFavorite(movie);
+        }
+    }
+
+    private void unitUi() {
+        navItemSelectedListener = getNavItemSelectedListener();
+        bottomNavigationView.setOnNavigationItemSelectedListener(navItemSelectedListener);
+        bottomNavigationView.setOnNavigationItemReselectedListener(getNavItemReselectedListener());
+        bottomNavigationView.setSelectedItemId(selectedNavItemId);
+    }
 
     @NonNull
     private Bundle getLoaderBundle(int selectedNavId) {
@@ -159,11 +172,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return bundle;
     }
 
-    private void setNavItemsListeners() {
-        navItemSelectedListener = getNavItemSelectedListener();
-        bottomNavigationView.setOnNavigationItemSelectedListener(navItemSelectedListener);
-        bottomNavigationView.setOnNavigationItemReselectedListener(getNavItemReselectedListener());
-    }
 
     @NonNull
     private OnNavigationItemSelectedListener getNavItemSelectedListener() {
@@ -182,6 +190,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         };
     }
 
+    @NonNull
+    private OnNavigationItemReselectedListener getNavItemReselectedListener() {
+        return new OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+                if (!isBeforeSelectedNavItem) {
+                    navItemSelectedListener.onNavigationItemSelected(item);
+                    isBeforeSelectedNavItem = !isBeforeSelectedNavItem;
+                }
+            }
+        };
+    }
+
+
     private void startNetworkLoader() {
         LoaderManager loaderManager = getSupportLoaderManager();
         Bundle bundle = getLoaderBundle(selectedNavItemId);
@@ -194,26 +216,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private void startDbLoader() {
         LoaderManager loaderManager = getSupportLoaderManager();
-
         if (loaderManager.getLoader(MOVIES_DATABASE_LOADER_ID) == null) {
             loaderManager.initLoader(MOVIES_DATABASE_LOADER_ID, null, MainActivity.this);
         } else {
             loaderManager.restartLoader(MOVIES_DATABASE_LOADER_ID, new Bundle(), MainActivity.this);
         }
-    }
-
-    @NonNull
-    private OnNavigationItemReselectedListener getNavItemReselectedListener() {
-        return new OnNavigationItemReselectedListener() {
-            @Override
-            public void onNavigationItemReselected(@NonNull MenuItem item) {
-                if (!isBeforeSelectedNavItem) {
-                    navItemSelectedListener.onNavigationItemSelected(item);
-                    isBeforeSelectedNavItem = !isBeforeSelectedNavItem;
-                }
-
-            }
-        };
     }
 
 

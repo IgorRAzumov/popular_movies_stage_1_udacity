@@ -2,6 +2,7 @@ package ru.geekbrains.popular_movies_stage_1_udacity.fragments;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,7 +14,6 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,22 +74,22 @@ public class MoviesResultFragment extends Fragment
 
 
     private void initResultRecycler() {
-        boolean isPortraitOrientation = getResources()
-                .getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
-        resultRecycler.setLayoutManager(new GridLayoutManager(getContext(),
-                isPortraitOrientation
-                        ? getResources().getInteger(R.integer.result_fragment_grid_span_count_portrait)
-                        : getResources().getInteger(R.integer.result_fragment_grid_span_count_landscape)
-        ));
-        resultRecycler.setAdapter(moviesResultAdapter);
-        resultRecycler.addItemDecoration(new SpacingItemDecoration(
-                isPortraitOrientation
-                        ? getResources().getInteger(R.integer.result_fragment_grid_span_count_portrait)
-                        : getResources().getInteger(R.integer.result_fragment_grid_span_count_landscape),
-                Utils.dpToPx(Objects.requireNonNull(getContext()),
-                        getResources().getInteger(R.integer.result_fragment_recycler_item_decorator_spacing)),
-                true));
-        resultRecycler.setHasFixedSize(true);
+        Resources resources = getResources();
+        Context context = getContext();
+        if (context != null) {
+            resultRecycler.setLayoutManager(new GridLayoutManager(context,
+                    Utils.calculateNoOfColumns(context,
+                            resources.getInteger(R.integer.movie_result_fr_rv_item_scale_factor))));
+            resultRecycler.setAdapter(moviesResultAdapter);
+            resultRecycler.addItemDecoration(new SpacingItemDecoration(
+                    resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT
+                            ? resources.getInteger(R.integer.result_fragment_grid_span_count_portrait)
+                            : resources.getInteger(R.integer.result_fragment_grid_span_count_landscape),
+                    Utils.dpToPx(context,
+                            resources.getInteger(R.integer.result_fragment_recycler_item_decorator_spacing)),
+                    true));
+            resultRecycler.setHasFixedSize(true);
+        }
     }
 
     @Override
@@ -133,7 +133,7 @@ public class MoviesResultFragment extends Fragment
 
     @Override
     public void onFavoriteClick(DisplayableMovie movie) {
-        interactionListener.onFavoriteClick(movie);
+        interactionListener.favoriteStatusChange(movie);
     }
 
     public void setData(List<DisplayableMovie> movies) {
@@ -142,9 +142,6 @@ public class MoviesResultFragment extends Fragment
 
     public void clearData() {
         moviesResultAdapter.clearData();
-        moviesResultAdapter.notifyDataSetChanged();
-        /*resultRecycler.clearOnScrollListeners();
-        resultRecycler.invalidate();*/
     }
 
     private void restoreResultRecyclerPosition(Bundle savedInstanceState) {
@@ -173,6 +170,6 @@ public class MoviesResultFragment extends Fragment
     public interface OnFragmentInteractionListener {
         void onMovieClick(DisplayableMovie movie, int moviePosition);
 
-        void onFavoriteClick(DisplayableMovie movie);
+        void favoriteStatusChange(DisplayableMovie movie);
     }
 }

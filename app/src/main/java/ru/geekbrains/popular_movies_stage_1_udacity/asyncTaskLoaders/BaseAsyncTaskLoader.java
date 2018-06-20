@@ -17,7 +17,7 @@ abstract class BaseAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
 
 
     void startLoad() {
-        if (result != null) {
+        if (result != null && !isReset()) {
             deliverResult(result);
         } else {
             forceLoad();
@@ -29,6 +29,13 @@ abstract class BaseAsyncTaskLoader<T> extends AsyncTaskLoader<T> {
     public void deliverResult(T result) {
         this.result = result;
         super.deliverResult(result);
+    }
+
+    protected final void onReset() {
+        super.onReset();
+        onStopLoading();
+
+
     }
 }
 

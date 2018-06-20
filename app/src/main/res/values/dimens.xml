@@ -37,5 +37,6 @@
     <dimen name="fragment_detail_movie_progress_margin">40dp</dimen>
     <dimen name="fragment_detail_movie_plot_synopsis_margin_top">-16dp</dimen>
     <dimen name="fragment_detail_content_margin_top">-32dp</dimen>
+    <dimen name="tv_fragment_detail_movies_name_padding_top">5dp</dimen>
 
 </resources>

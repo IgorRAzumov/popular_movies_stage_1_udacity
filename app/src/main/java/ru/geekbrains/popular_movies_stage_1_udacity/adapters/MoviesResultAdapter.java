@@ -91,7 +91,9 @@ public class MoviesResultAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void clearData() {
+        final int size = moviesList.size();
         moviesList.clear();
+        notifyItemRangeRemoved(0,size);
     }
 
     public interface RecycleViewOnItemClickListener {
