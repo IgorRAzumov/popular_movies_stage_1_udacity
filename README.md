@@ -41,5 +41,7 @@
 <li>You'll create a database to store the names and ids of the user's favorite movies (and optionally, the rest of the information needed to display their favorites collection while offline).</li>
 <li>You’ll modify the existing sorting criteria for the main view to include an additional pivot to show their favorites collection.</li>
 </ul>
-<p>Recall from Stage 1, you built a UI that presented the user with a grid of movie posters, allowed users to change sort order, and presented a screen with additional information on the movie selected by the user:</p>
+<h2 id="what-will-i-learn-after-stage-2-">What Will I Learn After Stage 2?</h2>
+<ul>
+<li>You will build a fully featured application that looks and feels natural on the latest Android operating system 
 </div>
