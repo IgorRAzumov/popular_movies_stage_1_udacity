@@ -1,7 +1,6 @@
+<div class="index--markdown--3w8oF ureact-markdown "><h2 id="project-overview">Stage 1</h2>
+<p>Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing.  We will split the development of this app in two stages.</p>
 
-<div class="index--markdown--3w8oF ureact-markdown "><h2 id="project-overview">Project Overview</h2>
-<p>Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing.  We will split the development of this app in two stages. First, let's talk about stage 1.</p>
-<p>In this stage you’ll build the core experience of your movies app.</p>
 <p>Your app will:</p>
 <ul>
 <li>Present the user with a grid arrangement of movie posters upon launch.</li>
@@ -27,5 +26,4 @@
 <li>You will use adapters and custom list layouts to populate list views.</li>
 <li>You will incorporate libraries to simplify the amount of code you need to write </li>
 </ul>
-<p>Ready to start building? Click "Next" for instructions!</p>
 </div>
