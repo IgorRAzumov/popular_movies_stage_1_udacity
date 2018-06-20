@@ -1,6 +1,10 @@
 <h1 id="project-name">Popular Movies</h2>
 
 
+
+![Demo GIF](/popularMovies1.gif)
+
+
 <div class="index--markdown--3w8oF ureact-markdown "><h2 id="project-overview">Stage 1</h2>
 <p>Most of us can relate to kicking back on the couch and enjoying a movie with friends and family. In this project, you’ll build an app to allow users to discover the most popular movies playing.  We will split the development of this app in two stages.</p>
 
